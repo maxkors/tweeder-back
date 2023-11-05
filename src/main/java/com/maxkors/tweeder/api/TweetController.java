@@ -1,11 +1,7 @@
 package com.maxkors.tweeder.api;
 
 import com.maxkors.tweeder.domain.Tweet;
-import com.maxkors.tweeder.domain.User;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,5 +26,10 @@ public class TweetController {
     @GetMapping
     List<Tweet> getAllTweets() {
         return tweets;
+    }
+
+    @GetMapping("/{id}")
+    Tweet getTweetById(@PathVariable("id") Long id) {
+        return tweets.get(id.intValue() - 1);
     }
 }
