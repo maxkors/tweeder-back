@@ -1,24 +1,31 @@
 package com.maxkors.tweeder.domain;
 
+import com.maxkors.tweeder.security.User;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "tweet")
 public class Tweet {
+
+    @Id
+    @SequenceGenerator(name = "tweet_seq_gen", sequenceName = "tweet_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tweet_seq_gen")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "app_user_id")
     private User user;
+
+    @Column(name = "text")
     private String text;
-    private Long comments;
+
+    @Column(name = "likes")
     private Long likes;
 
+    @Column(name = "date_time")
     private LocalDateTime dateTime;
-
-    public Tweet(Long id, User user, String text, Long comments, Long likes, LocalDateTime dateTime) {
-        this.id = id;
-        this.user = user;
-        this.text = text;
-        this.comments = comments;
-        this.likes = likes;
-        this.dateTime = dateTime;
-    }
 
     public Long getId() {
         return id;
@@ -42,14 +49,6 @@ public class Tweet {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public Long getComments() {
-        return comments;
-    }
-
-    public void setComments(Long comments) {
-        this.comments = comments;
     }
 
     public Long getLikes() {

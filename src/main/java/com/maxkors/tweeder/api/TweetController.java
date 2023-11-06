@@ -1,6 +1,8 @@
 package com.maxkors.tweeder.api;
 
 import com.maxkors.tweeder.domain.Tweet;
+import com.maxkors.tweeder.domain.TweetService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -11,25 +13,20 @@ import java.util.List;
 @RequestMapping("/tweets")
 public class TweetController {
 
-    List<Tweet> tweets;
+    TweetService tweetService;
 
-    public TweetController() {
-        var u1 = new User(1L, "mxms", "Maximus");
-        var u2 = new User(2L, "4lex", "Alex");
-        var u3 = new User(3L, "chezz", "Chester");
-
-        this.tweets = List.of(new Tweet(1L, u1, "Hi there", 3L, 25L, LocalDateTime.now().minusHours(1)),
-                new Tweet(2L, u2, "Can someone explain to me what gravity is?", 0L, 10L, LocalDateTime.now().minusHours(2)),
-                new Tweet(3L, u3, "I have something to tell you...", 33L, 195L, LocalDateTime.now().minusHours(4)));
+    @Autowired
+    public TweetController(TweetService tweetService) {
+        this.tweetService = tweetService;
     }
 
     @GetMapping
     List<Tweet> getAllTweets() {
-        return tweets;
+        return tweetService.getAllTweets();
     }
 
-    @GetMapping("/{id}")
-    Tweet getTweetById(@PathVariable("id") Long id) {
-        return tweets.get(id.intValue() - 1);
-    }
+//    @GetMapping("/{id}")
+//    Tweet getTweetById(@PathVariable("id") Long id) {
+//        return tweets.get(id.intValue() - 1);
+//    }
 }
