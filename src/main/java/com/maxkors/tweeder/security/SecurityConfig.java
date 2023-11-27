@@ -31,7 +31,8 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationProvider authenticationProvider;
+//    private final AuthenticationProvider authenticationProvider;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,13 +40,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(configurer -> configurer
                         .requestMatchers(HttpMethod.GET, "/tweets").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
 //                        .requestMatchers(HttpMethod.GET, "/tweets/liked").authenticated()
 //                        .requestMatchers("/tweets/{id}/like").authenticated()
 //                        .requestMatchers(HttpMethod.GET, "/profile").authenticated()
                         .anyRequest().denyAll())
                 .sessionManagement(configurer -> configurer.
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
+                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 //                .formLogin(configurer -> configurer
 //                        .permitAll()
@@ -83,15 +85,16 @@ public class SecurityConfig {
     @Bean
     AuthenticationProvider authenticationProvider() {
          var authProvider = new DaoAuthenticationProvider();
-         authProvider.setUserDetailsService(userDetailsService());
+//         authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService);
          authProvider.setPasswordEncoder(passwordEncoder());
          return authProvider;
     }
 
-    @Bean
-    UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl(userRepository);
-    }
+//    @Bean
+//    UserDetailsService userDetailsService() {
+//        return new UserDetailsServiceImpl(userRepository);
+//    }
 
     @Bean
     PasswordEncoder passwordEncoder() {

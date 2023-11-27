@@ -24,6 +24,10 @@ public class Role {
     public Role() {
     }
 
+    public Role(RoleName name) {
+        this.name = name;
+    }
+
     public RoleName getName() {
         return name;
     }
