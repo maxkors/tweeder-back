@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -42,6 +44,11 @@ public class User {
     @JoinTable(name = "app_user__role",
             joinColumns = @JoinColumn(name = "app_user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+//    @Cascade({org.hibernate.annotations.CascadeType.MERGE, })
     @JsonManagedReference
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
 }
