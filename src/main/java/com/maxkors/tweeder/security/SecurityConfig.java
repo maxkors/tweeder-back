@@ -41,6 +41,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(configurer -> configurer
                         .requestMatchers(HttpMethod.GET, "/tweets").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/profile").authenticated()
+                        .requestMatchers("/profiles").hasRole(RoleName.ROLE_ADMIN.value())
 //                        .requestMatchers(HttpMethod.GET, "/tweets/liked").authenticated()
 //                        .requestMatchers("/tweets/{id}/like").authenticated()
 //                        .requestMatchers(HttpMethod.GET, "/profile").authenticated()
