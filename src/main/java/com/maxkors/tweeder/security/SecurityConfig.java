@@ -39,7 +39,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(configurer -> configurer
-                        .requestMatchers(HttpMethod.GET, "/tweets").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/tweets/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/profile").authenticated()
                         .requestMatchers("/profiles").hasRole(RoleName.ROLE_ADMIN.value())
