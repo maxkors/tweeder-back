@@ -1,5 +1,6 @@
 package com.maxkors.tweeder.security;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -45,7 +46,8 @@ public class User {
             joinColumns = @JoinColumn(name = "app_user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
 //    @Cascade({org.hibernate.annotations.CascadeType.MERGE, })
-    @JsonManagedReference
+//    @JsonManagedReference
+//    @JsonBackReference
     private Set<Role> roles = new HashSet<>();
 
     public void addRole(Role role) {

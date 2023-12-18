@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -30,7 +31,7 @@ public class Tweet {
     private User user;
 
     @OneToMany(mappedBy = "tweet")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "text")
     private String text;

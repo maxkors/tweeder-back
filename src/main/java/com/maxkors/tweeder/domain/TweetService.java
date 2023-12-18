@@ -27,4 +27,9 @@ public class TweetService {
     public Optional<Tweet> getTweetById(Long id) {
         return Optional.of(tweetRepository.getById(id));
     }
+
+    @Transactional
+    public List<Tweet> getTweetsByUsername(String username) {
+        return tweetRepository.getTweetsByUsername(username);
+    }
 }

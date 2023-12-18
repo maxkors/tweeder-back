@@ -8,10 +8,12 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TweetRepository extends JpaRepository<Tweet, Long> {
-
     @Query("select distinct t from Tweet t join fetch t.user")
     List<Tweet> getAll();
 
     @Query("select distinct t from Tweet t join fetch t.user join fetch t.comments where t.id = :id")
     Tweet getById(@Param("id") Long id);
+
+    @Query("select distinct t from Tweet t join fetch t.user where t.user.username = :username")
+    List<Tweet> getTweetsByUsername(@Param("username") String username);
 }
