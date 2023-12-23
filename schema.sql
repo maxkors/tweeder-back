@@ -1,3 +1,4 @@
+drop table if exists subscription;
 drop table if exists comment;
 -- drop table if exists retweet;
 drop table if exists tweet;
@@ -65,6 +66,15 @@ create table comment
     foreign key (app_user_id) references app_user (id)
 );
 
+create table subscription
+(
+    follower_id int not null,
+    subject_id int not null,
+    foreign key (follower_id) references app_user (id),
+    foreign key (subject_id) references app_user (id),
+    primary key (follower_id, subject_id)
+);
+
 
 insert into app_user(username, password, name, email)
 values ('maximus', '$2a$10$PdYtIQYstvMYdtDuytzTJ.XyBRINgpCWPIcyi2R/txXuRPkDwcFSG', 'Maximus', 'mxms@gmail.com'),
@@ -91,6 +101,10 @@ values (1, 1, 'Salut', 87, '2023-06-22 19:10:25-07'),
 insert into comment
 values (1, 5, 1, 'Listening to music', 10, '2023-06-22 19:15:25-07'),
        (2, 5, 2, 'Nice', 3, '2023-06-22 19:17:25-07');
+
+insert into subscription
+values (1, 2),
+       (2, 1);
 
 -- select id, NULL as tweet_id, app_user_id, text, likes, date_time from tweet t
 -- where t.app_user_id = 1;

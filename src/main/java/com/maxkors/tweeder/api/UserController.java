@@ -20,12 +20,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/profile")
-    ResponseEntity<Profile> getProfile(@AuthenticationPrincipal User principal) {
+    ResponseEntity<ProfileWithSubscriptions> getProfile(@AuthenticationPrincipal User principal) {
         com.maxkors.tweeder.security.User user = userService
                 .getUserByUsername(principal.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return ResponseEntity.ok().body(new Profile(user.getUsername(), user.getName(), user.getEmail()));
+        List<com.maxkors.tweeder.security.User> subscriptions = userService.getSubscriptions(user.getUsername());
+
+        return ResponseEntity.ok().body(new ProfileWithSubscriptions(user.getUsername(), user.getName(), user.getEmail(), subscriptions));
     }
 
     @GetMapping("/profiles")
@@ -38,5 +40,8 @@ public class UserController {
     }
 
     record Profile(String username, String name, String email) {
+    }
+
+    record ProfileWithSubscriptions(String username, String name, String email, List<com.maxkors.tweeder.security.User> subscriptions) {
     }
 }

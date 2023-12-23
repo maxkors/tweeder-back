@@ -10,7 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -49,6 +51,20 @@ public class User {
 //    @JsonManagedReference
 //    @JsonBackReference
     private Set<Role> roles = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "subscription",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id"))
+    private List<User> subscriptions = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "subscription",
+            joinColumns = @JoinColumn(name = "subject_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id"))
+    private List<User> subscribers = new ArrayList<>();
 
     public void addRole(Role role) {
         this.roles.add(role);

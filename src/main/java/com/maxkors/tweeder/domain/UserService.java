@@ -24,4 +24,9 @@ public class UserService {
     public List<User> getAll() {
         return userRepository.findAll();
     }
+
+    @Transactional
+    public List<User> getSubscriptions(String username) {
+        return userRepository.getSubscriptions(username);
+    }
 }
