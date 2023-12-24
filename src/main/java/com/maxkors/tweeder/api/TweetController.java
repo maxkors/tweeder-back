@@ -2,10 +2,11 @@ package com.maxkors.tweeder.api;
 
 import com.maxkors.tweeder.domain.Tweet;
 import com.maxkors.tweeder.domain.TweetService;
-import com.maxkors.tweeder.security.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,12 @@ public class TweetController {
     @GetMapping
     List<Tweet> getAllTweets() {
         return tweetService.getAllTweets();
+    }
+
+    @PostMapping
+    ResponseEntity<String> createTweet(@AuthenticationPrincipal User principal, @RequestBody String content) {
+        tweetService.createTweet(principal, content);
+        return ResponseEntity.ok().body("Tweet created");
     }
 
     @GetMapping("/{id}")
@@ -41,5 +48,5 @@ public class TweetController {
         return ResponseEntity.ok().body(tweetWithoutComments);
     }
 
-    record TweetWithoutCommentsDTO(Long id, User user, String text, Long likes, LocalDateTime dateTime) {}
+    record TweetWithoutCommentsDTO(Long id, com.maxkors.tweeder.security.User user, String text, Long likes, LocalDateTime dateTime) {}
 }

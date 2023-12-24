@@ -90,21 +90,21 @@ values (1, 1),
        (2, 2),
        (3, 2);
 
-insert into tweet
-values (1, 1, 'Salut', 87, '2023-06-22 19:10:25-07'),
-       (2, 1, 'Whats new?', 23, '2023-06-20 13:10:25-07'),
-       (3, 2, 'Halo', 54, '2023-03-22 11:10:25-07'),
-       (4, 2, 'Just look at this:', 10, '2023-03-22 11:10:25-07'),
-       (5, 2, 'What are u doing rn?', 10, '2023-03-22 11:10:25-07'),
-       (6, 3, 'There is nothing impossible to him who will try', 128, '2023-08-10 16:10:25-07');
+insert into tweet(app_user_id, text, likes, date_time)
+values (1, 'Salut', 87, '2023-06-22 19:10:25-07'),
+       (1, 'Whats new?', 23, '2023-06-20 13:10:25-07'),
+       (2, 'Halo', 54, '2023-03-22 11:10:25-07'),
+       (2, 'Just look at this:', 10, '2023-03-22 11:10:25-07'),
+       (2, 'What are u doing rn?', 10, '2023-03-22 11:10:25-07'),
+       (3, 'There is nothing impossible to him who will try', 128, '2023-08-10 16:10:25-07');
 
 -- insert into retweet
 -- values (1, 3, 1, 'Ciao', 5, '2023-06-22 19:15:25-07');
 
-insert into comment
-values (1, 5, 1, 'Listening to music', 10, '2023-06-22 19:15:25-07'),
-       (2, 5, 2, 'Nice', 3, '2023-06-22 19:17:25-07'),
-       (3, 2, 3, 'Sup?', 5, '2023-06-22 19:17:25-07');
+insert into comment(tweet_id, app_user_id, text, likes, date_time)
+values (5, 1, 'Listening to music', 10, '2023-06-22 19:15:25-07'),
+       (5, 2, 'Nice', 3, '2023-06-22 19:17:25-07'),
+       (2, 3, 'Sup?', 5, '2023-06-22 19:17:25-07');
 
 insert into subscription
 values (1, 2),

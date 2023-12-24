@@ -18,8 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select s from User u join u.subscribers s where u.username = :username")
     List<User> getSubscribers(@Param("username") String username);
 
-//    @Query("select new com.maxkors.tweeder.infrastructure.Profile(u.username, u.name, COUNT(u.subscriptions), COUNT(u.subscribers)) from User u join u.subscribers join u.subscriptions where u.username = :username")
-    @Query( value = """
+    //    @Query("select new com.maxkors.tweeder.infrastructure.Profile(u.username, u.name, COUNT(u.subscriptions), COUNT(u.subscribers)) from User u join u.subscribers join u.subscriptions where u.username = :username")
+    @Query(value = """
                 select u.id,
                        u.username,
                        u.name,
@@ -29,6 +29,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
                          left join subscription s on u.id in (s.subject_id, s.follower_id)
                 where u.username = 'maximus'
                 group by u.id
-            """,nativeQuery = true)
+            """, nativeQuery = true)
     Profile getProfile(@Param("username") String username);
 }
