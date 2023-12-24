@@ -1,5 +1,6 @@
 package com.maxkors.tweeder.domain;
 
+import com.maxkors.tweeder.infrastructure.Profile;
 import com.maxkors.tweeder.infrastructure.UserRepository;
 import com.maxkors.tweeder.security.User;
 import jakarta.transaction.Transactional;
@@ -16,8 +17,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<User> getByUsername(String username) {
+        return userRepository.getByUsername(username);
     }
 
     @Transactional
@@ -28,5 +29,10 @@ public class UserService {
     @Transactional
     public List<User> getSubscriptions(String username) {
         return userRepository.getSubscriptions(username);
+    }
+
+    @Transactional
+    public Profile getProfile(String username) {
+        return userRepository.getProfile(username);
     }
 }

@@ -46,7 +46,7 @@ public class AuthenticationService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signinRequest.username(), signinRequest.password()));
 
-        var user = userRepository.findByUsername(signinRequest.username()).orElseThrow();
+        var user = userRepository.getByUsername(signinRequest.username()).orElseThrow();
 
         String jwtToken = jwtService.generateToken(UserDetailsServiceImpl.mapUserToUserDetails(user));
 

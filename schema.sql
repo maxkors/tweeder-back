@@ -69,7 +69,7 @@ create table comment
 create table subscription
 (
     follower_id int not null,
-    subject_id int not null,
+    subject_id  int not null,
     foreign key (follower_id) references app_user (id),
     foreign key (subject_id) references app_user (id),
     primary key (follower_id, subject_id)
@@ -78,7 +78,8 @@ create table subscription
 
 insert into app_user(username, password, name, email)
 values ('maximus', '$2a$10$PdYtIQYstvMYdtDuytzTJ.XyBRINgpCWPIcyi2R/txXuRPkDwcFSG', 'Maximus', 'mxms@gmail.com'),
-       ('commodus', '$2a$10$YaMK5THDlDuvDYCrsaUBBuuFbqO8Q.2rVNBPT9i06U7YlEP9ZL1V6', 'Commodus', 'cmdus@gmail.com');
+       ('commodus', '$2a$10$YaMK5THDlDuvDYCrsaUBBuuFbqO8Q.2rVNBPT9i06U7YlEP9ZL1V6', 'Commodus', 'cmdus@gmail.com'),
+       ('alexander', '$2a$10$qGFTYYDxRNs0iySmRy.Nxu9J7EyUu2BWtJcAnjJ7wh2yPWYi35FiW', 'Alexander', 'alex@gmail.com');
 
 insert into role(name)
 values ('ROLE_ADMIN'),
@@ -86,25 +87,29 @@ values ('ROLE_ADMIN'),
 
 insert into app_user__role(app_user_id, role_id)
 values (1, 1),
-       (2, 2);
+       (2, 2),
+       (3, 2);
 
 insert into tweet
 values (1, 1, 'Salut', 87, '2023-06-22 19:10:25-07'),
        (2, 1, 'Whats new?', 23, '2023-06-20 13:10:25-07'),
        (3, 2, 'Halo', 54, '2023-03-22 11:10:25-07'),
        (4, 2, 'Just look at this:', 10, '2023-03-22 11:10:25-07'),
-       (5, 2, 'What are u doing rn?', 10, '2023-03-22 11:10:25-07');
+       (5, 2, 'What are u doing rn?', 10, '2023-03-22 11:10:25-07'),
+       (6, 3, 'There is nothing impossible to him who will try', 128, '2023-08-10 16:10:25-07');
 
 -- insert into retweet
 -- values (1, 3, 1, 'Ciao', 5, '2023-06-22 19:15:25-07');
 
 insert into comment
 values (1, 5, 1, 'Listening to music', 10, '2023-06-22 19:15:25-07'),
-       (2, 5, 2, 'Nice', 3, '2023-06-22 19:17:25-07');
+       (2, 5, 2, 'Nice', 3, '2023-06-22 19:17:25-07'),
+       (3, 2, 3, 'Sup?', 5, '2023-06-22 19:17:25-07');
 
 insert into subscription
 values (1, 2),
-       (2, 1);
+       (2, 1),
+       (3, 1);
 
 -- select id, NULL as tweet_id, app_user_id, text, likes, date_time from tweet t
 -- where t.app_user_id = 1;
@@ -112,3 +117,20 @@ values (1, 2),
 -- select * from retweet rt
 -- inner join tweet t on rt.tweet_id = t.id
 -- where rt.app_user_id = 1;
+
+select u.name, count(s.follower_id) as subscribers, count(s.subject_id) as subscriptions
+from app_user u
+         left join subscription s on u.id in (s.follower_id, s.subject_id)
+where u.username = 'maximus'
+group by u.id, u.name;
+
+select u.id,
+       u.username,
+       u.name,
+       count(case u.id when s.subject_id then 1 end)  as subscribersCount,
+       count(case u.id when s.follower_id then 1 end) as subscriptionsCount
+from app_user u
+         left join subscription s on u.id in (s.subject_id, s.follower_id)
+where u.username = 'maximus'
+group by u.id
+;
