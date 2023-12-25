@@ -46,14 +46,7 @@ public class TweetController {
     }
 
     @GetMapping("/users/{username}")
-    ResponseEntity<List<TweetWithoutCommentsDTO>> getTweetsByUsername(@PathVariable("username") String username) {
-        List<Tweet> tweets = tweetService.getTweetsByUsername(username);
-
-        List<TweetWithoutCommentsDTO> tweetWithoutComments = tweets.stream()
-                .map((t -> new TweetWithoutCommentsDTO(t.getId(), t.getUser(), t.getText(), t.getLikes(), t.getDateTime()))).toList();
-
-        return ResponseEntity.ok().body(tweetWithoutComments);
+    ResponseEntity<List<TweetPlainDTO>> getTweetsByUsername(@PathVariable("username") String username) {
+        return ResponseEntity.ok().body(tweetService.getTweetsByUsername(username));
     }
-
-    record TweetWithoutCommentsDTO(Long id, com.maxkors.tweeder.security.User user, String text, Long likes, LocalDateTime dateTime) {}
 }

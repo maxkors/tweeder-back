@@ -34,7 +34,7 @@ public class TweetService {
     }
 
     @Transactional
-    public List<Tweet> getTweetsByUsername(String username) {
+    public List<TweetPlainDTO> getTweetsByUsername(String username) {
         return tweetRepository.getTweetsByUsername(username);
     }
 
