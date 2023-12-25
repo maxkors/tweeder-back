@@ -2,6 +2,7 @@ package com.maxkors.tweeder.api;
 
 import com.maxkors.tweeder.domain.Tweet;
 import com.maxkors.tweeder.domain.TweetService;
+import com.maxkors.tweeder.infrastructure.TweetPlainDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class TweetController {
     private final TweetService tweetService;
 
     @GetMapping
-    List<Tweet> getAllTweets() {
+    List<TweetPlainDTO> getAllTweets() {
         return tweetService.getAllTweets();
     }
 
@@ -36,6 +37,12 @@ public class TweetController {
         return tweetService.getTweetById(id)
                 .map((tweet) -> ResponseEntity.ok().body(tweet))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<String> deleteTweetById(@AuthenticationPrincipal User principal, @PathVariable("id") Long id) {
+        tweetService.deleteTweetById(principal, id);
+        return ResponseEntity.ok().body("Tweet deleted");
     }
 
     @GetMapping("/users/{username}")

@@ -1,7 +1,7 @@
 package com.maxkors.tweeder.api;
 
 import com.maxkors.tweeder.domain.UserService;
-import com.maxkors.tweeder.infrastructure.Profile;
+import com.maxkors.tweeder.infrastructure.ProfileDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,8 +20,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/profile")
-    ResponseEntity<Profile> getProfile(@AuthenticationPrincipal User principal) {
-        Profile profile = userService.getProfile(principal.getUsername());
+    ResponseEntity<ProfileDTO> getProfile(@AuthenticationPrincipal User principal) {
+        ProfileDTO profile = userService.getProfile(principal.getUsername());
 
         return ResponseEntity.ok().body(profile);
     }

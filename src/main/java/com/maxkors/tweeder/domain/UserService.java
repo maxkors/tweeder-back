@@ -1,6 +1,6 @@
 package com.maxkors.tweeder.domain;
 
-import com.maxkors.tweeder.infrastructure.Profile;
+import com.maxkors.tweeder.infrastructure.ProfileDTO;
 import com.maxkors.tweeder.infrastructure.UserRepository;
 import com.maxkors.tweeder.security.User;
 import jakarta.transaction.Transactional;
@@ -32,7 +32,7 @@ public class UserService {
     }
 
     @Transactional
-    public Profile getProfile(String username) {
+    public ProfileDTO getProfile(String username) {
         return userRepository.getProfile(username);
     }
 }

@@ -1,6 +1,6 @@
 package com.maxkors.tweeder.infrastructure;
 
-public interface Profile {
+public interface ProfileDTO {
     Long getId();
 
     String getUsername();

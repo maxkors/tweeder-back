@@ -104,7 +104,8 @@ values (1, 'Salut', 87, '2023-06-22 19:10:25-07'),
 insert into comment(tweet_id, app_user_id, text, likes, date_time)
 values (5, 1, 'Listening to music', 10, '2023-06-22 19:15:25-07'),
        (5, 2, 'Nice', 3, '2023-06-22 19:17:25-07'),
-       (2, 3, 'Sup?', 5, '2023-06-22 19:17:25-07');
+       (2, 3, 'Sup?', 5, '2023-06-22 19:17:25-07'),
+       (1, 3, 'Salam', 1, '2023-06-22 19:17:25-07');
 
 insert into subscription
 values (1, 2),

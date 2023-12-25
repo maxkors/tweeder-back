@@ -30,5 +30,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 where u.username = 'maximus'
                 group by u.id
             """, nativeQuery = true)
-    Profile getProfile(@Param("username") String username);
+    ProfileDTO getProfile(@Param("username") String username);
 }
