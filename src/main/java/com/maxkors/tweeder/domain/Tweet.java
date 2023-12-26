@@ -1,7 +1,5 @@
 package com.maxkors.tweeder.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.maxkors.tweeder.security.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

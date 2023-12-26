@@ -4,16 +4,12 @@ import com.maxkors.tweeder.infrastructure.TweetPlainDTO;
 import com.maxkors.tweeder.infrastructure.TweetRepository;
 import com.maxkors.tweeder.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -49,12 +45,11 @@ public class TweetService {
     // TODO: create custom User auth principal class to be able to get userId
     @Transactional
     public void deleteTweetById(User principal, Long tweetId) {
-        userRepository.getByUsername(principal.getUsername()).ifPresent(user -> {
-            tweetRepository.getByIdEntirely(tweetId).ifPresent(tweet -> {
-                if (user.getId().equals(tweet.getUser().getId())) {
-                    tweetRepository.delete(tweet);
-                }
-            });
-        });
+        userRepository.getByUsername(principal.getUsername()).ifPresent(user ->
+                tweetRepository.getByIdEntirely(tweetId).ifPresent(tweet -> {
+                    if (user.getId().equals(tweet.getUser().getId())) {
+                        tweetRepository.delete(tweet);
+                    }
+                }));
     }
 }
