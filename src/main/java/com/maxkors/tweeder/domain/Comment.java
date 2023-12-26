@@ -36,7 +36,7 @@ public class Comment {
     private String text;
 
     @Column(name = "likes")
-    private Integer likes;
+    private Long likes;
 
     @Column(name = "date_time")
     private LocalDateTime dateTime;

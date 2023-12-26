@@ -28,7 +28,7 @@ public class Tweet {
     @JoinColumn(name = "app_user_id")
     private User user;
 
-    @OneToMany(mappedBy = "tweet")
+    @OneToMany(mappedBy = "tweet", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "text")

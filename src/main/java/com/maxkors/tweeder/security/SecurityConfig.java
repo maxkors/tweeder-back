@@ -44,9 +44,16 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/tweets/{id}").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/tweets/{id}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/tweets/users/{username}").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/comments").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/comments/{id}").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/comments/{id}").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/comments/users/{username}").permitAll()
+
                         .requestMatchers("/profile").authenticated()
                         .requestMatchers("/profiles").hasRole(RoleName.ROLE_ADMIN.value())
+
+                        .requestMatchers("/auth/**").permitAll()
 //                        .requestMatchers(HttpMethod.GET, "/tweets/liked").authenticated()
 //                        .requestMatchers("/tweets/{id}/like").authenticated()
 //                        .requestMatchers(HttpMethod.GET, "/profile").authenticated()
