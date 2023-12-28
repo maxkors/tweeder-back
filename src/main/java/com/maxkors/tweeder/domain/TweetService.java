@@ -31,7 +31,7 @@ public class TweetService {
 
     @Transactional
     public List<TweetPlainDTO> getTweetsByUsername(String username) {
-        return tweetRepository.getTweetsByUsername(username);
+        return tweetRepository.getByUsername(username);
     }
 
     @Transactional
@@ -51,5 +51,10 @@ public class TweetService {
                         tweetRepository.delete(tweet);
                     }
                 }));
+    }
+
+    @Transactional
+    public List<TweetPlainDTO> getTweetsFromUserSubscriptions(String username) {
+        return tweetRepository.getFromUserSubscriptions(username);
     }
 }

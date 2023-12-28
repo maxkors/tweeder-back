@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/tweets/{id}").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/tweets/{id}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/tweets/users/{username}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/tweets/feed").authenticated()
 
                         .requestMatchers(HttpMethod.POST, "/comments").authenticated()
                         .requestMatchers(HttpMethod.GET, "/comments/{id}").permitAll()

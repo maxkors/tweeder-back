@@ -1,6 +1,7 @@
 package com.maxkors.tweeder.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.maxkors.tweeder.domain.Tweet;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,6 +49,10 @@ public class User {
 //    @JsonManagedReference
 //    @JsonBackReference
     private Set<Role> roles = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    List<Tweet> tweets = new ArrayList<>();
 
     @JsonIgnore
     @ManyToMany

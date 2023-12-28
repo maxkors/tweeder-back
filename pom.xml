@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.maxkors</groupId>
 	<artifactId>tweeder</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>tweeder</name>
 	<description>Tweeder</description>
 	<properties>

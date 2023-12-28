@@ -109,6 +109,7 @@ values (5, 1, 'Listening to music', 10, '2023-06-22 19:15:25-07'),
 
 insert into subscription
 values (1, 2),
+       (1, 3),
        (2, 1),
        (3, 1);
 
@@ -133,5 +134,12 @@ select u.id,
 from app_user u
          left join subscription s on u.id in (s.subject_id, s.follower_id)
 where u.username = 'maximus'
-group by u.id
-;
+group by u.id;
+
+select t.id, t.app_user_id, t.text, t.likes, t.date_time
+from app_user u
+         left join subscription s on u.id = s.follower_id
+         left join app_user su on s.subject_id = su.id
+         left join tweet t on su.id = t.app_user_id
+where u.username = 'maximus'
+order by t.date_time desc;

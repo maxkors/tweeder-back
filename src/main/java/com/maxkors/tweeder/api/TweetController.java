@@ -47,4 +47,9 @@ public class TweetController {
     ResponseEntity<List<TweetPlainDTO>> getTweetsByUsername(@PathVariable("username") String username) {
         return ResponseEntity.ok().body(tweetService.getTweetsByUsername(username));
     }
+
+    @GetMapping("/feed")
+    ResponseEntity<List<TweetPlainDTO>> getTweetsFromUserSubscriptions (@AuthenticationPrincipal User principal) {
+        return ResponseEntity.ok().body(tweetService.getTweetsFromUserSubscriptions(principal.getUsername()));
+    }
 }
