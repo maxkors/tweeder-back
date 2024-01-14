@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tweets")
-@CrossOrigin("http://localhost:3000/")
 @RequiredArgsConstructor
 public class TweetController {
 

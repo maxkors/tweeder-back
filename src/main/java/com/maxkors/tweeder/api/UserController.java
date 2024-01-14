@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@CrossOrigin(value = "http://localhost:3000/")
 @RequiredArgsConstructor
 public class UserController {
 
