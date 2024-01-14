@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface TweetRepository extends JpaRepository<Tweet, Long> {
     @Query(value = """
-             select t.id, u.name, u.username, t.text, t.likes, t.date_time, count(c) as commentsCount
+             select t.id, u.name, u.username, t.text, t.likes, t.date_time as dateTime, count(c) as commentsCount
              from Tweet t
              join app_user u on t.app_user_id = u.id
              left join comment c on t.id = c.tweet_id
@@ -22,7 +22,7 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
     Optional<Tweet> getByIdEntirely(@Param("id") Long id);
 
     @Query(value = """
-            select t.id, u.name, u.username, t.text, t.likes, t.date_time, count(c) as commentsCount
+            select t.id, u.name, u.username, t.text, t.likes, t.date_time as dateTime, count(c) as commentsCount
             from tweet t
             left join app_user u on t.app_user_id = u.id
             left join comment c on t.id = c.tweet_id
@@ -32,14 +32,14 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
     List<TweetPlainDTO> getByUsername(@Param("username") String username);
 
     @Query(value = """
-                select t.id, u.name, u.username, t.text, t.likes, t.date_time, count(c) as commentsCount
+                select t.id, su.name, su.username, t.text, t.likes, t.date_time as dateTime, count(c) as commentsCount
                                         from app_user u
                                                  left join subscription s on u.id = s.follower_id
                                                  left join app_user su on s.subject_id = su.id
                                                  left join tweet t on su.id = t.app_user_id
                                                  left join comment c on t.id = c.tweet_id
                                         where u.username = 'maximus'
-                                        group by t.id, t.date_time, u.id
+                                        group by t.id, t.date_time, su.id
                                         order by t.date_time desc
             """, nativeQuery = true)
     List<TweetPlainDTO> getFromUserSubscriptions(@Param("username") String username);
