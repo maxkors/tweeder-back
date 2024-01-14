@@ -136,10 +136,12 @@ from app_user u
 where u.username = 'maximus'
 group by u.id;
 
-select t.id, t.app_user_id, t.text, t.likes, t.date_time
+select t.id, t.app_user_id, t.text, t.likes, t.date_time, count(c) as commentsCount
 from app_user u
          left join subscription s on u.id = s.follower_id
          left join app_user su on s.subject_id = su.id
          left join tweet t on su.id = t.app_user_id
+         left join comment c on t.id = c.tweet_id
 where u.username = 'maximus'
+group by t.id, t.date_time
 order by t.date_time desc;

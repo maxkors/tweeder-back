@@ -5,13 +5,12 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class TweetPlainDTO {
-    private Long id;
-    private User user;
-    private String text;
-    private Long likes;
-    private LocalDateTime dateTime;
+public interface TweetPlainDTO {
+    Long getId();
+    String getName();
+    String getUsername();
+    String getText();
+    Long getLikes();
+    LocalDateTime getDateTime();
+    Long getCommentsCount();
 }
