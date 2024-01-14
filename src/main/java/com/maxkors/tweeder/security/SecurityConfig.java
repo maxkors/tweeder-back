@@ -21,8 +21,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -31,12 +36,14 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-//    private final AuthenticationProvider authenticationProvider;
+    //    private final AuthenticationProvider authenticationProvider;
     private final UserDetailsServiceImpl userDetailsService;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors(configurer -> configurer
+                        .configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(configurer -> configurer
                         .requestMatchers(HttpMethod.GET, "/tweets").hasRole(RoleName.ROLE_ADMIN.value())
@@ -54,7 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/profile").authenticated()
                         .requestMatchers("/profiles").hasRole(RoleName.ROLE_ADMIN.value())
 
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/signin").permitAll()
 //                        .requestMatchers(HttpMethod.GET, "/tweets/liked").authenticated()
 //                        .requestMatchers("/tweets/{id}/like").authenticated()
 //                        .requestMatchers(HttpMethod.GET, "/profile").authenticated()
@@ -98,11 +105,11 @@ public class SecurityConfig {
 
     @Bean
     AuthenticationProvider authenticationProvider() {
-         var authProvider = new DaoAuthenticationProvider();
+        var authProvider = new DaoAuthenticationProvider();
 //         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setUserDetailsService(userDetailsService);
-         authProvider.setPasswordEncoder(passwordEncoder());
-         return authProvider;
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 
 //    @Bean
@@ -124,4 +131,16 @@ public class SecurityConfig {
 //            }
 //        };
 //    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
