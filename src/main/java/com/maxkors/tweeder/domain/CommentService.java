@@ -38,6 +38,8 @@ public class CommentService {
                             Comment comment = Comment.builder()
                                     .tweet(tweet).user(user).text(content).likes(0L).dateTime(LocalDateTime.now()).build();
                             this.commentRepository.save(comment);
+
+                            tweet.setCommentsCount(tweet.getCommentsCount() + 1L);
                         }
                 ));
     }
@@ -48,6 +50,9 @@ public class CommentService {
                 this.commentRepository.findById(commentId).ifPresent(comment -> {
                     if (user.getId().equals(comment.getUser().getId())) {
                         this.commentRepository.delete(comment);
+
+                        Tweet tweet = comment.getTweet();
+                        tweet.setCommentsCount(tweet.getCommentsCount() - 1L);
                     }
                 }));
     }

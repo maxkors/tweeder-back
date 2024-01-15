@@ -34,8 +34,11 @@ public class Tweet {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "likes")
-    private Long likes;
+    @Column(name = "likes_count")
+    private Long likesCount;
+
+    @Column(name = "comments_count")
+    private Long commentsCount;
 
     @Column(name = "date_time")
     private LocalDateTime dateTime;

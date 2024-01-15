@@ -37,7 +37,13 @@ public class TweetService {
     @Transactional
     public void createTweet(User principal, String content) {
         userRepository.getByUsername(principal.getUsername()).ifPresent(user -> {
-            Tweet tweet = Tweet.builder().user(user).text(content).likes(0L).dateTime(LocalDateTime.now()).build();
+            Tweet tweet = Tweet.builder()
+                    .user(user)
+                    .text(content)
+                    .likesCount(0L)
+                    .commentsCount(0L)
+                    .dateTime(LocalDateTime.now())
+                    .build();
             tweetRepository.save(tweet);
         });
     }
