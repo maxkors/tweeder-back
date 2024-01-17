@@ -32,16 +32,44 @@ public class CommentService {
 
     // TODO: optimize queries and create additional Repo methods so as not to receive unnecessary data
     @Transactional
-    public void createComment(User principal, String content, Long tweetId) {
-        this.userRepository.getByUsername(principal.getUsername()).ifPresent(user ->
-                this.tweetRepository.getByIdEntirely(tweetId).ifPresent(tweet -> {
-                            Comment comment = Comment.builder()
-                                    .tweet(tweet).user(user).text(content).likes(0L).dateTime(LocalDateTime.now()).build();
-                            this.commentRepository.save(comment);
+    public Optional<Comment> createComment(User principal, String content, Long tweetId) {
+        return this.userRepository.getByUsername(principal.getUsername()).flatMap(user ->
+                this.tweetRepository.getByIdEntirely((tweetId)).map(tweet -> {
 
-                            tweet.setCommentsCount(tweet.getCommentsCount() + 1L);
-                        }
-                ));
+                    Comment comment = Comment.builder()
+                            .tweet(tweet)
+                            .user(user)
+                            .text(content)
+                            .likesCount(0L)
+                            .dateTime(LocalDateTime.now())
+                            .build();
+
+                    tweet.setCommentsCount(tweet.getCommentsCount() + 1L);
+
+                    return this.commentRepository.save(comment);
+                }));
+
+
+//        Comment createdComment;
+
+//        this.userRepository.getByUsername(principal.getUsername()).ifPresent(user ->
+//                this.tweetRepository.getByIdEntirely(tweetId).ifPresent(tweet -> {
+//
+//                            Comment comment = Comment.builder()
+//                                    .tweet(tweet)
+//                                    .user(user)
+//                                    .text(content)
+//                                    .likesCount(0L)
+//                                    .dateTime(LocalDateTime.now())
+//                                    .build();
+//
+//                            this.commentRepository.save(comment);
+//
+//                            tweet.setCommentsCount(tweet.getCommentsCount() + 1L);
+//                        }
+//                ));
+
+//        return createdComment;
     }
 
     @Transactional

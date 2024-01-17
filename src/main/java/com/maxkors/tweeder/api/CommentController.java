@@ -18,9 +18,10 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    ResponseEntity<String> createComment(@AuthenticationPrincipal User principal, @RequestBody CommentRequest comment) {
-        commentService.createComment(principal, comment.content, comment.tweetId);
-        return ResponseEntity.ok().body("Comment created");
+    ResponseEntity<Comment> createComment(@AuthenticationPrincipal User principal, @RequestBody CommentRequest commentRequest) {
+        return commentService.createComment(principal, commentRequest.content, commentRequest.tweetId)
+                .map(comment -> ResponseEntity.ok().body(comment))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @GetMapping("/{id}")
@@ -41,5 +42,6 @@ public class CommentController {
         return ResponseEntity.ok().body(commentService.getCommentsByUsername(username));
     }
 
-    record CommentRequest(String content, Long tweetId){};
+    record CommentRequest(String content, Long tweetId) {
+    }
 }

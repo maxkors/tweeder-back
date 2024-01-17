@@ -35,8 +35,8 @@ public class Comment {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "likes")
-    private Long likes;
+    @Column(name = "likes_count")
+    private Long likesCount;
 
     @Column(name = "date_time")
     private LocalDateTime dateTime;

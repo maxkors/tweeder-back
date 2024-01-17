@@ -60,7 +60,7 @@ create table comment
 --     retweet_id  int       not null,
     app_user_id int       not null,
     text        varchar(280),
-    likes       int       not null,
+    likes_count       int       not null,
     date_time   timestamp not null,
     foreign key (tweet_id) references tweet (id),
 --     foreign key (retweet_id) references retweet (id),
@@ -102,7 +102,7 @@ values (1, 'Salut', 87, 1, '2023-06-22 19:10:25-07'),
 -- insert into retweet
 -- values (1, 3, 1, 'Ciao', 5, '2023-06-22 19:15:25-07');
 
-insert into comment(tweet_id, app_user_id, text, likes, date_time)
+insert into comment(tweet_id, app_user_id, text, likes_count, date_time)
 values (5, 1, 'Listening to music', 10, '2023-06-22 19:15:25-07'),
        (5, 2, 'Nice', 3, '2023-06-22 19:17:25-07'),
        (2, 3, 'Sup?', 5, '2023-06-22 19:17:25-07'),
