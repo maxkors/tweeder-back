@@ -35,7 +35,14 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
                     left join u.subscriptions s
                     left join s.tweets t
                 where u.username = :username
-                order by t.dateTime desc
+                
+                union
+                select new com.maxkors.tweeder.infrastructure.TweetPlainDTO(t.id, t.user, t.text, t.likesCount, t.commentsCount, t.dateTime)
+                from User u
+                    left join u.tweets t
+                where u.username = :username
+                
             """)
+//    order by t.dateTime desc
     List<TweetPlainDTO> getFromUserSubscriptions(@Param("username") String username);
 }

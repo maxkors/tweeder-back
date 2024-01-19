@@ -24,8 +24,8 @@ public class TweetController {
     }
 
     @PostMapping
-    ResponseEntity<String> createTweet(@AuthenticationPrincipal User principal, @RequestBody String content) {
-        tweetService.createTweet(principal, content);
+    ResponseEntity<String> createTweet(@AuthenticationPrincipal User principal, @RequestBody TweetRequest tweet) {
+        tweetService.createTweet(principal, tweet.text);
         return ResponseEntity.ok().body("Tweet created");
     }
 
@@ -48,7 +48,10 @@ public class TweetController {
     }
 
     @GetMapping("/feed")
-    ResponseEntity<List<TweetPlainDTO>> getTweetsFromUserSubscriptions (@AuthenticationPrincipal User principal) {
+    ResponseEntity<List<TweetPlainDTO>> getTweetsFromUserSubscriptions(@AuthenticationPrincipal User principal) {
         return ResponseEntity.ok().body(tweetService.getTweetsFromUserSubscriptions(principal.getUsername()));
+    }
+
+    record TweetRequest(String text) {
     }
 }

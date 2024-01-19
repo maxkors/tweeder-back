@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +62,8 @@ public class TweetService {
 
     @Transactional
     public List<TweetPlainDTO> getTweetsFromUserSubscriptions(String username) {
-        return tweetRepository.getFromUserSubscriptions(username);
+        List<TweetPlainDTO> tweets = tweetRepository.getFromUserSubscriptions(username);
+        tweets.sort(Comparator.comparing(TweetPlainDTO::getDateTime).reversed());
+        return tweets;
     }
 }
