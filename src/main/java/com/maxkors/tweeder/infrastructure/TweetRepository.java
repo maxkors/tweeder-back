@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface TweetRepository extends JpaRepository<Tweet, Long> {
     @Query("""
@@ -45,4 +46,12 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
             """)
 //    order by t.dateTime desc
     List<TweetPlainDTO> getFromUserSubscriptions(@Param("username") String username);
+
+    @Query("""
+                select t.id
+                from Tweet t
+                left join t.likes l
+                where l.username = :username and t.id in :ids
+            """)
+    Set<Long> getLikedPostIdsFromList(String username, List<Long> ids);
 }

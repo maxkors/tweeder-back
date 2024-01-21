@@ -1,5 +1,7 @@
 package com.maxkors.tweeder.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.maxkors.tweeder.security.Role;
 import com.maxkors.tweeder.security.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +11,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -42,4 +46,11 @@ public class Tweet {
 
     @Column(name = "date_time")
     private LocalDateTime dateTime;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "user_like",
+            joinColumns = @JoinColumn(name = "tweet_id"),
+            inverseJoinColumns = @JoinColumn(name = "app_user_id"))
+    private List<User> likes = new ArrayList<>();
 }

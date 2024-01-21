@@ -9,9 +9,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +62,19 @@ public class TweetService {
     public List<TweetPlainDTO> getTweetsFromUserSubscriptions(String username) {
         List<TweetPlainDTO> tweets = tweetRepository.getFromUserSubscriptions(username);
         tweets.sort(Comparator.comparing(TweetPlainDTO::getDateTime).reversed());
+
+        List<Long> tweetIds = new ArrayList<>();
+
+        tweets.forEach(tweet -> tweetIds.add(tweet.getId()));
+
+        Set<Long> likedPostIds = this.tweetRepository.getLikedPostIdsFromList(username, tweetIds);
+
+        for (TweetPlainDTO tweet : tweets) {
+            if (likedPostIds.contains(tweet.getId())) {
+                tweet.setLiked(true);
+            }
+        }
+
         return tweets;
     }
 }

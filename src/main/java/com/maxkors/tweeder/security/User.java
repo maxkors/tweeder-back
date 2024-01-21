@@ -68,6 +68,13 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "follower_id"))
     private List<User> subscribers = new ArrayList<>();
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "user_like",
+            joinColumns = @JoinColumn(name = "app_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tweet_id"))
+    private List<Tweet> likedTweets = new ArrayList<>();
+
     public void addRole(Role role) {
         this.roles.add(role);
     }
