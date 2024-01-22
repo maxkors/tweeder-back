@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -24,8 +25,26 @@ public class TweetService {
     }
 
     @Transactional
-    public Optional<Tweet> getTweetById(Long id) {
-        return tweetRepository.getByIdEntirely(id);
+    public Optional<Tweet> getTweetById(User principal, Long id) {
+        return tweetRepository.getByIdEntirely(id).map(tweet -> {
+            List<Long> tweetIds = new ArrayList<>();
+            tweetIds.add(tweet.getId());
+            tweet.getChildren().forEach(child -> tweetIds.add(child.getId()));
+
+            Set<Long> likedPostIds = this.tweetRepository.getLikedPostIdsFromList(principal.getUsername(), tweetIds);
+
+            if (likedPostIds.contains(tweet.getId())) {
+                tweet.setLiked(true);
+            }
+
+            for (Tweet children : tweet.getChildren()) {
+                if (likedPostIds.contains(children.getId())) {
+                    children.setLiked(true);
+                }
+            }
+
+            return tweet;
+        });
     }
 
     @Transactional

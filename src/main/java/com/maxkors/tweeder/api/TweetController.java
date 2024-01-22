@@ -30,9 +30,37 @@ public class TweetController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Tweet> getTweetById(@PathVariable("id") Long id) {
-        return tweetService.getTweetById(id)
-                .map((tweet) -> ResponseEntity.ok().body(tweet))
+    ResponseEntity<TweetParentView> getTweetById(@AuthenticationPrincipal User principal, @PathVariable("id") Long id) {
+//        return tweetService.getTweetById(id)
+//                .map((tweet) -> ResponseEntity.ok().body(tweet))
+//                .orElseGet(() -> ResponseEntity.notFound().build());
+
+        return tweetService.getTweetById(principal, id)
+                .map((tweet) -> {
+                    List<TweetChildView> children = tweet.getChildren().stream().map(child -> TweetChildView.builder()
+                            .id(child.getId())
+                            .user(child.getUser())
+                            .text(child.getText())
+                            .likesCount(child.getLikesCount())
+                            .commentsCount(child.getCommentsCount())
+                            .dateTime(child.getDateTime())
+                            .isLiked(child.isLiked())
+                            .build()).toList();
+
+                    TweetParentView parent = TweetParentView.builder()
+                            .id(tweet.getId())
+                            .user(tweet.getUser())
+                            .text(tweet.getText())
+                            .likesCount(tweet.getLikesCount())
+                            .commentsCount(tweet.getCommentsCount())
+                            .dateTime(tweet.getDateTime())
+                            .isLiked(tweet.isLiked())
+                            .children(children)
+                            .build();
+
+                    return ResponseEntity.ok().body(parent);
+
+                })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 

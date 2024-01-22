@@ -19,8 +19,10 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
             select distinct t
             from Tweet t
                 left join fetch t.user
-                left join fetch t.comments
-            where t.id = :id""")
+                left join fetch t.children
+            where t.id = :id
+            and t.parent = null
+            """)
     Optional<Tweet> getByIdEntirely(@Param("id") Long id);
 
     @Query("""

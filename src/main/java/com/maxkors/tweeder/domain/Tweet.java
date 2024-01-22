@@ -28,10 +28,12 @@ public class Tweet {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tweet_seq_gen")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "app_user_id")
     private User user;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "tweet", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
@@ -53,4 +55,13 @@ public class Tweet {
             joinColumns = @JoinColumn(name = "tweet_id"),
             inverseJoinColumns = @JoinColumn(name = "app_user_id"))
     private List<User> likes = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Tweet parent;
+
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    private List<Tweet> children;
+
+    @Transient
+    private boolean isLiked;
 }

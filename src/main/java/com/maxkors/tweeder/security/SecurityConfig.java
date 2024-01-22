@@ -48,7 +48,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(configurer -> configurer
                         .requestMatchers(HttpMethod.GET, "/tweets").hasRole(RoleName.ROLE_ADMIN.value())
                         .requestMatchers(HttpMethod.POST, "/tweets").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/tweets/{id}").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/tweets/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/tweets/{id}").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/tweets/{id}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/tweets/users/{username}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/tweets/feed").authenticated()

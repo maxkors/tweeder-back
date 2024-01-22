@@ -3,6 +3,7 @@ drop table if exists subscription;
 drop table if exists comment;
 -- drop table if exists retweet;
 drop table if exists tweet;
+drop table if exists tweet_child;
 drop table if exists app_user__role;
 drop table if exists role;
 drop table if exists app_user;
@@ -31,15 +32,36 @@ create table app_user__role
     primary key (app_user_id, role_id)
 );
 
+-- create table tweet
+-- (
+--     id            serial primary key,
+--     app_user_id   int       not null,
+--     text          varchar(280),
+--     likes_count    int       not null,
+--     comments_count int       not null,
+--     date_time     timestamp not null,
+--     foreign key (app_user_id) references app_user (id)
+-- );
+
 create table tweet
 (
-    id            serial primary key,
-    app_user_id   int       not null,
-    text          varchar(280),
+    id             serial primary key,
+    app_user_id    int       not null,
+    text           varchar(280),
     likes_count    int       not null,
     comments_count int       not null,
-    date_time     timestamp not null,
+    date_time      timestamp not null,
+    parent_id         int,
     foreign key (app_user_id) references app_user (id)
+);
+
+create table tweet_child
+(
+    tweet_id int not null,
+    child_id int not null,
+    foreign key (tweet_id) references tweet (id),
+    foreign key (child_id) references tweet (id),
+    primary key (tweet_id, child_id)
 );
 
 -- create table retweet
@@ -61,7 +83,7 @@ create table comment
 --     retweet_id  int       not null,
     app_user_id int       not null,
     text        varchar(280),
-    likes_count       int       not null,
+    likes_count int       not null,
     date_time   timestamp not null,
     foreign key (tweet_id) references tweet (id),
 --     foreign key (retweet_id) references retweet (id),
@@ -80,7 +102,7 @@ create table subscription
 create table user_like
 (
     app_user_id int not null,
-    tweet_id     int not null,
+    tweet_id    int not null,
     foreign key (app_user_id) references app_user (id),
     foreign key (tweet_id) references tweet (id),
     primary key (app_user_id, tweet_id)
@@ -101,13 +123,21 @@ values (1, 1),
        (2, 2),
        (3, 2);
 
-insert into tweet(app_user_id, text, likes_count, comments_count, date_time)
-values (1, 'Salut', 87, 1, '2023-06-22 19:10:25-07'),
-       (1, 'Whats new?', 23, 1, '2023-06-20 13:10:25-07'),
-       (2, 'Halo', 54, 0, '2023-03-22 11:10:25-07'),
-       (2, 'Just look at this:', 10, 0, '2023-03-22 11:10:25-07'),
-       (2, 'What are u doing rn?', 10, 2, '2023-03-22 11:10:25-07'),
-       (3, 'There is nothing impossible to him who will try', 128, 0, '2023-08-10 16:10:25-07');
+-- insert into tweet(app_user_id, text, likes_count, comments_count, date_time)
+-- values (1, 'Salut', 87, 1, '2023-06-22 19:10:25-07'),
+--        (1, 'Whats new?', 23, 1, '2023-06-20 13:10:25-07'),
+--        (2, 'Halo', 54, 0, '2023-03-22 11:10:25-07'),
+--        (2, 'Just look at this:', 10, 0, '2023-03-22 11:10:25-07'),
+--        (2, 'What are u doing rn?', 10, 2, '2023-03-22 11:10:25-07'),
+--        (3, 'There is nothing impossible to him who will try', 128, 0, '2023-08-10 16:10:25-07');
+
+insert into tweet(app_user_id, text, likes_count, comments_count, date_time, parent_id)
+values (1, 'Salut', 87, 2, '2023-06-22 19:10:25-07', null),
+       (1, 'Whats new?', 23, 0, '2023-06-20 13:10:25-07', 1),
+       (2, 'Halo', 54, 0, '2023-03-22 11:10:25-07', 1),
+       (2, 'Just look at this:', 10, 0, '2023-03-22 11:10:25-07', null),
+       (2, 'What are u doing rn?', 10, 0, '2023-03-22 11:10:25-07', null),
+       (3, 'There is nothing impossible to him who will try', 128, 0, '2023-08-10 16:10:25-07', null);
 
 -- insert into retweet
 -- values (1, 3, 1, 'Ciao', 5, '2023-06-22 19:15:25-07');
