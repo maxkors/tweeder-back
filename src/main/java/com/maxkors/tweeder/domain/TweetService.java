@@ -53,16 +53,26 @@ public class TweetService {
     }
 
     @Transactional
-    public void createTweet(User principal, String content) {
-        userRepository.getByUsername(principal.getUsername()).ifPresent(user -> {
+    public Optional<Tweet> createTweet(User principal, String content, Long parentPostId) {
+        return this.userRepository.getByUsername(principal.getUsername()).map(user -> {
+            Tweet parent = null;
+
+            if (parentPostId != null) {
+                parent = this.tweetRepository.getByIdEntirely(parentPostId)
+                        .orElseThrow(() -> new IllegalArgumentException("Wrong parent post id"));
+                parent.setCommentsCount(parent.getCommentsCount() + 1L);
+            }
+
             Tweet tweet = Tweet.builder()
                     .user(user)
                     .text(content)
                     .likesCount(0L)
                     .commentsCount(0L)
                     .dateTime(LocalDateTime.now())
+                    .parent(parent)
                     .build();
-            tweetRepository.save(tweet);
+
+            return tweetRepository.save(tweet);
         });
     }
 

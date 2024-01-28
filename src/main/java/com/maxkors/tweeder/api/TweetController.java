@@ -3,6 +3,7 @@ package com.maxkors.tweeder.api;
 import com.maxkors.tweeder.domain.Tweet;
 import com.maxkors.tweeder.domain.TweetService;
 import com.maxkors.tweeder.infrastructure.TweetPlainDTO;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,9 +25,24 @@ public class TweetController {
     }
 
     @PostMapping
-    ResponseEntity<String> createTweet(@AuthenticationPrincipal User principal, @RequestBody TweetRequest tweet) {
-        tweetService.createTweet(principal, tweet.text);
-        return ResponseEntity.ok().body("Tweet created");
+    ResponseEntity<TweetParentView> createTweet(@AuthenticationPrincipal User principal, @RequestBody TweetRequest tweetRequest) {
+        return tweetService.createTweet(principal, tweetRequest.text, tweetRequest.parentPostId)
+                .map(tweet -> {
+
+                    TweetParentView tweetParentView = TweetParentView.builder()
+                            .id(tweet.getId())
+                            .user(tweet.getUser())
+                            .text(tweet.getText())
+                            .likesCount(tweet.getLikesCount())
+                            .commentsCount(tweet.getCommentsCount())
+                            .dateTime(tweet.getDateTime())
+                            .isLiked(tweet.isLiked())
+                            .children(null)
+                            .build();
+
+                    return ResponseEntity.ok().body(tweetParentView);
+                })
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @GetMapping("/{id}")
@@ -80,6 +96,6 @@ public class TweetController {
         return ResponseEntity.ok().body(tweetService.getTweetsFromUserSubscriptions(principal.getUsername()));
     }
 
-    record TweetRequest(String text) {
+    record TweetRequest(String text, @Nullable Long parentPostId) {
     }
 }
