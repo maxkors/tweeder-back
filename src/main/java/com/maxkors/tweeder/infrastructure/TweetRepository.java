@@ -29,8 +29,15 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
             select new com.maxkors.tweeder.infrastructure.TweetPlainDTO(t.id, t.user, t.text, t.likesCount, t.commentsCount, t.dateTime)
             from Tweet t
                 join t.user
-            where t.user.username = :username""")
+            where t.user.username = :username and t.parent = null""")
     List<TweetPlainDTO> getByUsername(@Param("username") String username);
+
+    @Query("""
+            select new com.maxkors.tweeder.infrastructure.TweetPlainDTO(t.id, t.user, t.text, t.likesCount, t.commentsCount, t.dateTime)
+            from User u
+                join u.likedTweets t
+            where u.username = :username""")
+    List<TweetPlainDTO> getLikedByUsername(@Param("username") String username);
 
     @Query("""
                 select new com.maxkors.tweeder.infrastructure.TweetPlainDTO(t.id, t.user, t.text, t.likesCount, t.commentsCount, t.dateTime)

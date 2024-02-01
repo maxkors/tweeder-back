@@ -53,6 +53,13 @@ public class TweetService {
     }
 
     @Transactional
+    public List<TweetPlainDTO> getLikedPostsByUsername(String username) {
+        List<TweetPlainDTO> likedTweets = tweetRepository.getLikedByUsername(username);
+        likedTweets.forEach(tweet -> tweet.setLiked(true));
+        return likedTweets;
+    }
+
+    @Transactional
     public Optional<Tweet> createTweet(User principal, String content, Long parentPostId) {
         return this.userRepository.getByUsername(principal.getUsername()).map(user -> {
             Tweet parent = null;
