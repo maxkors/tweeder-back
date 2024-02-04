@@ -147,14 +147,20 @@ public class TweetService {
     }
 
     @Transactional
-    public Optional<Boolean> addLike(Long postId, String username) {
-        return this.userRepository.getByUsername(username).flatMap(user ->
-                this.tweetRepository.getByIdWithLikes(postId).map(tweet -> tweet.getLikes().add(user)));
+    public void addLike(Long postId, String username) {
+        this.userRepository.getByUsername(username).ifPresent(user ->
+                this.tweetRepository.getByIdWithLikes(postId).ifPresent(tweet -> {
+                    tweet.getLikes().add(user);
+                    tweet.setLikesCount(tweet.getLikesCount() + 1L);
+                }));
     }
 
     @Transactional
-    public Optional<Boolean> removeLike(Long postId, String username) {
-        return this.userRepository.getByUsername(username).flatMap(user ->
-                this.tweetRepository.getByIdWithLikes(postId).map(tweet -> tweet.getLikes().remove(user)));
+    public void removeLike(Long postId, String username) {
+        this.userRepository.getByUsername(username).ifPresent(user ->
+                this.tweetRepository.getByIdWithLikes(postId).ifPresent(tweet -> {
+                    tweet.getLikes().remove(user);
+                    tweet.setLikesCount(tweet.getLikesCount() - 1L);
+                }));
     }
 }

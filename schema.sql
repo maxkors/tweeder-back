@@ -132,12 +132,12 @@ values (1, 1),
 --        (3, 'There is nothing impossible to him who will try', 128, 0, '2023-08-10 16:10:25-07');
 
 insert into tweet(app_user_id, text, likes_count, comments_count, date_time, parent_id)
-values (1, 'Salut', 87, 2, '2023-06-22 19:10:25-07', null),
-       (1, 'Whats new?', 23, 0, '2023-06-20 13:10:25-07', 1),
-       (2, 'Halo', 54, 0, '2023-03-22 11:10:25-07', 1),
-       (2, 'Just look at this:', 10, 0, '2023-03-22 11:10:25-07', null),
-       (2, 'What are u doing rn?', 10, 0, '2023-03-22 11:10:25-07', null),
-       (3, 'There is nothing impossible to him who will try', 128, 0, '2023-08-10 16:10:25-07', null);
+values (1, 'Salut', 2, 2, '2023-06-22 19:10:25-07', null),
+       (1, 'Whats new?', 1, 0, '2023-06-20 13:10:25-07', 1),
+       (2, 'Halo', 1, 1, '2023-03-22 11:10:25-07', 1),
+       (2, 'Just look at this:', 0, 0, '2023-03-22 11:10:25-07', null),
+       (2, 'What are u doing rn?', 0, 0, '2023-03-22 11:10:25-07', null),
+       (3, 'There is nothing impossible to him who will try', 0, 0, '2023-08-10 16:10:25-07', null);
 
 -- insert into retweet
 -- values (1, 3, 1, 'Ciao', 5, '2023-06-22 19:15:25-07');

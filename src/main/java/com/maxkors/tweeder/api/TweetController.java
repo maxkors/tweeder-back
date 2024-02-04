@@ -103,16 +103,14 @@ public class TweetController {
 
     @PostMapping("/{id}/like")
     ResponseEntity<?> addLike(@AuthenticationPrincipal User principal, @PathVariable("id") Long id) {
-        return this.tweetService.addLike(id, principal.getUsername())
-                .filter(aBoolean -> aBoolean).map(aBoolean -> ResponseEntity.ok().build())
-                .orElseGet(() -> ResponseEntity.badRequest().build());
+        this.tweetService.addLike(id, principal.getUsername());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/like")
     ResponseEntity<?> removeLike(@AuthenticationPrincipal User principal, @PathVariable("id") Long id) {
-        return this.tweetService.removeLike(id, principal.getUsername())
-                .filter(aBoolean -> aBoolean).map(aBoolean -> ResponseEntity.ok().build())
-                .orElseGet(() -> ResponseEntity.badRequest().build());
+        this.tweetService.removeLike(id, principal.getUsername());
+        return ResponseEntity.ok().build();
     }
 
     record TweetRequest(String text, @Nullable Long parentPostId) {
