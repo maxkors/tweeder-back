@@ -54,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/tweets/users/{username}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/tweets/feed").authenticated()
                         .requestMatchers(HttpMethod.GET, "tweets/users/{username}/liked").authenticated()
+                        .requestMatchers("/tweets/{id}/like").authenticated()
 
 
                         .requestMatchers(HttpMethod.POST, "/comments").authenticated()

@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -145,5 +144,17 @@ public class TweetService {
         }
 
         return tweets;
+    }
+
+    @Transactional
+    public Optional<Boolean> addLike(Long postId, String username) {
+        return this.userRepository.getByUsername(username).flatMap(user ->
+                this.tweetRepository.getByIdWithLikes(postId).map(tweet -> tweet.getLikes().add(user)));
+    }
+
+    @Transactional
+    public Optional<Boolean> removeLike(Long postId, String username) {
+        return this.userRepository.getByUsername(username).flatMap(user ->
+                this.tweetRepository.getByIdWithLikes(postId).map(tweet -> tweet.getLikes().remove(user)));
     }
 }

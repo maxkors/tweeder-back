@@ -20,9 +20,15 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
             from Tweet t
                 left join fetch t.user
                 left join fetch t.children
-            where t.id = :id
-            """)
+            where t.id = :id""")
     Optional<Tweet> getByIdEntirely(@Param("id") Long id);
+
+    @Query("""
+            select distinct t
+            from Tweet t
+                left join t.likes
+            where t.id = :id""")
+    Optional<Tweet> getByIdWithLikes(@Param("id") Long id);
 
     @Query("""
             select new com.maxkors.tweeder.infrastructure.TweetPlainDTO(t.id, t.user, t.text, t.likesCount, t.commentsCount, t.dateTime)

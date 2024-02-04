@@ -54,7 +54,7 @@ public class Tweet {
     @JoinTable(name = "user_like",
             joinColumns = @JoinColumn(name = "tweet_id"),
             inverseJoinColumns = @JoinColumn(name = "app_user_id"))
-    private List<User> likes = new ArrayList<>();
+    private Set<User> likes = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Tweet parent;

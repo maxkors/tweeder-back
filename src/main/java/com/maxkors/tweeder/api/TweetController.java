@@ -101,6 +101,20 @@ public class TweetController {
         return ResponseEntity.ok().body(tweetService.getTweetsFromUserSubscriptions(principal.getUsername()));
     }
 
+    @PostMapping("/{id}/like")
+    ResponseEntity<?> addLike(@AuthenticationPrincipal User principal, @PathVariable("id") Long id) {
+        return this.tweetService.addLike(id, principal.getUsername())
+                .filter(aBoolean -> aBoolean).map(aBoolean -> ResponseEntity.ok().build())
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
+    @DeleteMapping("/{id}/like")
+    ResponseEntity<?> removeLike(@AuthenticationPrincipal User principal, @PathVariable("id") Long id) {
+        return this.tweetService.removeLike(id, principal.getUsername())
+                .filter(aBoolean -> aBoolean).map(aBoolean -> ResponseEntity.ok().build())
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
     record TweetRequest(String text, @Nullable Long parentPostId) {
     }
 }
