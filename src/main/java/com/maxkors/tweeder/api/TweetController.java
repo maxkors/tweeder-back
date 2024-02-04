@@ -92,8 +92,8 @@ public class TweetController {
     }
 
     @GetMapping("/users/{username}/liked")
-    ResponseEntity<List<TweetPlainDTO>> getLikedTweetsByUsername(@PathVariable("username") String username) {
-        return ResponseEntity.ok().body(tweetService.getLikedPostsByUsername(username));
+    ResponseEntity<List<TweetPlainDTO>> getLikedTweetsByUsername(@AuthenticationPrincipal User principal, @PathVariable("username") String username) {
+        return ResponseEntity.ok().body(tweetService.getLikedPostsByUsername(username, principal));
     }
 
     @GetMapping("/feed")

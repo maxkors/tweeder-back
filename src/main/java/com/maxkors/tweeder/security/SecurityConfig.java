@@ -61,7 +61,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/comments/{id}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/comments/users/{username}").permitAll()
 
-                        .requestMatchers("/profile").authenticated()
+                        .requestMatchers("/profiles/{username}").authenticated()
                         .requestMatchers("/profiles").hasRole(RoleName.ROLE_ADMIN.value())
 
                         .requestMatchers("/auth/signin").permitAll()

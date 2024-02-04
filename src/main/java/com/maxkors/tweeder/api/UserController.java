@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,9 +19,9 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/profile")
-    ResponseEntity<ProfileDTO> getProfile(@AuthenticationPrincipal User principal) {
-        ProfileDTO profile = userService.getProfile(principal.getUsername());
+    @GetMapping("/profiles/{username}")
+    ResponseEntity<ProfileDTO> getProfile(@PathVariable String username) {
+        ProfileDTO profile = userService.getProfile(username);
 
         return ResponseEntity.ok().body(profile);
     }

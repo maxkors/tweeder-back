@@ -156,8 +156,10 @@ values (1, 2),
 
 insert into user_like
 values (1, 1),
+       (1, 3),
        (2, 1),
-       (1, 3);
+       (2, 2);
+
 
 -- select id, NULL as tweet_id, app_user_id, text, likes, date_time from tweet t
 -- where t.app_user_id = 1;

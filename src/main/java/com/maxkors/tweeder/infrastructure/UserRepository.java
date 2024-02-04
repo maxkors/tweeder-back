@@ -27,7 +27,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                        count(case u.id when s.follower_id then 1 end)  as subscriptionsCount
                 from app_user u
                          left join subscription s on u.id in (s.subject_id, s.follower_id)
-                where u.username = 'maximus'
+                where u.username = :username
                 group by u.id
             """, nativeQuery = true)
     ProfileDTO getProfile(@Param("username") String username);

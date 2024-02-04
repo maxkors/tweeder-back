@@ -21,7 +21,6 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
                 left join fetch t.user
                 left join fetch t.children
             where t.id = :id
-            and t.parent = null
             """)
     Optional<Tweet> getByIdEntirely(@Param("id") Long id);
 
