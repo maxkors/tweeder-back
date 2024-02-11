@@ -6,28 +6,40 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/profiles/{username}")
-    ResponseEntity<ProfileDTO> getProfile(@PathVariable String username) {
-        ProfileDTO profile = userService.getProfile(username);
+    @GetMapping
+    ResponseEntity<List<com.maxkors.tweeder.security.User>> getAllProfiles() {
+        return ResponseEntity.ok().body(this.userService.getAll());
+    }
+
+    @GetMapping("/{username}")
+    ResponseEntity<ProfileDTO> getProfile(@PathVariable String username, @AuthenticationPrincipal User principal) {
+        ProfileDTO profile = this.userService.getProfile(username, principal);
 
         return ResponseEntity.ok().body(profile);
     }
 
-    @GetMapping("/profiles")
-    ResponseEntity<List<com.maxkors.tweeder.security.User>> getAllProfiles() {
-        return ResponseEntity.ok().body(userService.getAll());
+    @PostMapping("/{username}/follow")
+    ResponseEntity<?> followUser(@PathVariable("username") String username, @AuthenticationPrincipal User principal) {
+        this.userService.addFollower(principal.getUsername(), username);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{username}/follow")
+    ResponseEntity<?> unfollowUser(@PathVariable("username") String username, @AuthenticationPrincipal User principal) {
+        this.userService.removeFollower(principal.getUsername(), username);
+
+        return ResponseEntity.ok().build();
     }
 }

@@ -74,7 +74,7 @@ public class TweetService {
 
         if (principal.getUsername().equals(username)) {
             likedTweets.forEach(tweet -> tweet.setLiked(true));
-            return likedTweets;
+            return likedTweets.reversed();
         }
 
         List<Long> tweetIds = new ArrayList<>();
@@ -88,7 +88,8 @@ public class TweetService {
             }
         }
 
-        return likedTweets;
+
+        return likedTweets.reversed();
     }
 
     @Transactional

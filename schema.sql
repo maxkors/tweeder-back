@@ -193,3 +193,20 @@ values (1, 1),
 -- where u.username = 'maximus'
 -- group by t.id, t.date_time
 -- order by t.date_time desc;
+
+select u.id,
+       u.username,
+       u.name,
+       count(case u.id when s.subject_id then 1 end) as subscribersCount,
+       count(case u.id when s.follower_id then 1 end) as subscriptionsCount,
+       bool_or((select au.id from app_user au where au.username = 'maximus') = s.follower_id) as isFollowed
+from app_user u
+         left join subscription s on u.id in (s.subject_id, s.follower_id)
+where u.username = 'commodus'
+group by u.id;
+
+select *
+from app_user u
+         left join subscription s on u.id in (s.subject_id, s.follower_id)
+where u.username = 'commodus'
+group by u.id, s.subject_id, s.follower_id;

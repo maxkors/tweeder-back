@@ -24,11 +24,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
                        u.username,
                        u.name,
                        count(case u.id when s.subject_id then 1 end) as subscribersCount,
-                       count(case u.id when s.follower_id then 1 end)  as subscriptionsCount
+                       count(case u.id when s.follower_id then 1 end)  as subscriptionsCount,
+                       bool_or((select au.id from app_user au where au.username = :principal) = s.follower_id) as isFollowed
                 from app_user u
                          left join subscription s on u.id in (s.subject_id, s.follower_id)
                 where u.username = :username
                 group by u.id
             """, nativeQuery = true)
-    ProfileDTO getProfile(@Param("username") String username);
+    ProfileDTO getProfile(@Param("username") String username, @Param("principal") String principal);
+
+    Optional<User> findByUsername(String username);
 }

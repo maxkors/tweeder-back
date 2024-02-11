@@ -10,4 +10,6 @@ public interface ProfileDTO {
     Long getSubscriptionsCount();
 
     Long getSubscribersCount();
+
+    Boolean getIsFollowed();
 }

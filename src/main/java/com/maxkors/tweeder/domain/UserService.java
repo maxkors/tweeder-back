@@ -32,7 +32,21 @@ public class UserService {
     }
 
     @Transactional
-    public ProfileDTO getProfile(String username) {
-        return userRepository.getProfile(username);
+    public ProfileDTO getProfile(String username, org.springframework.security.core.userdetails.User principal) {
+        return userRepository.getProfile(username, principal.getUsername());
+    }
+
+    @Transactional
+    public void addFollower(String followerUsername, String subjectUsername) {
+        this.userRepository.findByUsername(subjectUsername)
+                .ifPresent(subject -> this.userRepository.findByUsername(followerUsername)
+                        .ifPresent(follower -> subject.getSubscribers().add(follower)));
+    }
+
+    @Transactional
+    public void removeFollower(String followerUsername, String subjectUsername) {
+        this.userRepository.findByUsername(subjectUsername)
+                .ifPresent(subject -> this.userRepository.findByUsername(followerUsername)
+                        .ifPresent(follower -> subject.getSubscribers().remove(follower)));
     }
 }
