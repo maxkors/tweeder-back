@@ -1,5 +1,7 @@
 package com.maxkors.tweeder.api;
 
+import com.maxkors.tweeder.domain.Media;
+import com.maxkors.tweeder.domain.Tweet;
 import com.maxkors.tweeder.security.User;
 import lombok.Builder;
 import lombok.Data;
@@ -18,4 +20,19 @@ public class TweetParentView {
     private LocalDateTime dateTime;
     private boolean isLiked;
     private List<TweetChildView> children;
+    private List<Media> media;
+
+    public static TweetParentView from(Tweet tweet, List<TweetChildView> children) {
+        return TweetParentView.builder()
+                .id(tweet.getId())
+                .user(tweet.getUser())
+                .text(tweet.getText())
+                .likesCount(tweet.getLikesCount())
+                .commentsCount(tweet.getCommentsCount())
+                .dateTime(tweet.getDateTime())
+                .media(tweet.getMedia())
+                .children(children)
+                .isLiked(tweet.isLiked())
+                .build();
+    }
 }

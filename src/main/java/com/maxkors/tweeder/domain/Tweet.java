@@ -57,10 +57,14 @@ public class Tweet {
     private Set<User> likes = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
     private Tweet parent;
 
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<Tweet> children;
+
+    @OneToMany(mappedBy = "tweet", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Media> media;
 
     @Transient
     private boolean isLiked;

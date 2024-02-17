@@ -3,6 +3,7 @@ drop table if exists subscription;
 drop table if exists comment;
 -- drop table if exists retweet;
 drop table if exists tweet_child;
+drop table if exists media;
 drop table if exists tweet;
 drop table if exists app_user__role;
 drop table if exists role;
@@ -51,8 +52,17 @@ create table tweet
     likes_count    int       not null,
     comments_count int       not null,
     date_time      timestamp not null,
-    parent_id         int,
+    parent_id      int,
     foreign key (app_user_id) references app_user (id)
+);
+
+create table media
+(
+    id       serial primary key,
+    type     varchar(20)  not null,
+    urn      varchar(100) not null,
+    tweet_id int          not null,
+    foreign key (tweet_id) references tweet (id)
 );
 
 create table tweet_child
@@ -134,13 +144,25 @@ values (1, 1),
 insert into tweet(app_user_id, text, likes_count, comments_count, date_time, parent_id)
 values (1, 'Salut', 2, 2, '2023-06-22 19:10:25-07', null),
        (1, 'Whats new?', 1, 0, '2023-06-20 13:10:25-07', 1),
-       (2, 'Halo', 1, 1, '2023-03-22 11:10:25-07', 1),
+       (2, 'Halo', 1, 0, '2023-03-22 11:10:25-07', 1),
        (2, 'Just look at this:', 0, 0, '2023-03-22 11:10:25-07', null),
        (2, 'What are u doing rn?', 0, 0, '2023-03-22 11:10:25-07', null),
        (3, 'There is nothing impossible to him who will try', 0, 0, '2023-08-10 16:10:25-07', null);
 
 -- insert into retweet
 -- values (1, 3, 1, 'Ciao', 5, '2023-06-22 19:15:25-07');
+
+insert into media (type, urn, tweet_id)
+values ('image', 'room1-1.webp', 1),
+       ('image', 'room2-1.webp', 2),
+       ('image', 'room2-2.webp', 2),
+       ('image', 'room4-1.webp', 4),
+       ('image', 'room4-2.webp', 4),
+       ('image', 'room4-3.webp', 4),
+       ('image', 'room4-4.webp', 4),
+       ('image', 'room5-1.webp', 5),
+       ('image', 'room5-2.webp', 5),
+       ('image', 'room5-3.webp', 5);
 
 insert into comment(tweet_id, app_user_id, text, likes_count, date_time)
 values (5, 1, 'Listening to music', 10, '2023-06-22 19:15:25-07'),
@@ -194,19 +216,3 @@ values (1, 1),
 -- group by t.id, t.date_time
 -- order by t.date_time desc;
 
-select u.id,
-       u.username,
-       u.name,
-       count(case u.id when s.subject_id then 1 end) as subscribersCount,
-       count(case u.id when s.follower_id then 1 end) as subscriptionsCount,
-       bool_or((select au.id from app_user au where au.username = 'maximus') = s.follower_id) as isFollowed
-from app_user u
-         left join subscription s on u.id in (s.subject_id, s.follower_id)
-where u.username = 'commodus'
-group by u.id;
-
-select *
-from app_user u
-         left join subscription s on u.id in (s.subject_id, s.follower_id)
-where u.username = 'commodus'
-group by u.id, s.subject_id, s.follower_id;

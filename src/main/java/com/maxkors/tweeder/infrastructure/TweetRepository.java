@@ -11,9 +11,9 @@ import java.util.Set;
 
 public interface TweetRepository extends JpaRepository<Tweet, Long> {
     @Query("""
-             select new com.maxkors.tweeder.infrastructure.TweetPlainDTO(t.id, t.user, t.text, t.likesCount, t.commentsCount, t.dateTime)
+             select t
              from Tweet t join t.user""")
-    List<TweetPlainDTO> getAll();
+    List<Tweet> getAll();
 
     @Query("""
             select distinct t
@@ -31,35 +31,53 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
     Optional<Tweet> getByIdWithLikes(@Param("id") Long id);
 
     @Query("""
-            select new com.maxkors.tweeder.infrastructure.TweetPlainDTO(t.id, t.user, t.text, t.likesCount, t.commentsCount, t.dateTime)
+            select t
+            from Tweet t
+                join t.user
+            where t.user.username = :username""")
+    List<Tweet> getByUsernameAll(@Param("username") String username);
+
+    @Query("""
+            select t
             from Tweet t
                 join t.user
             where t.user.username = :username and t.parent = null""")
-    List<TweetPlainDTO> getByUsername(@Param("username") String username);
+    List<Tweet> getByUsernameParents(@Param("username") String username);
 
     @Query("""
-            select new com.maxkors.tweeder.infrastructure.TweetPlainDTO(t.id, t.user, t.text, t.likesCount, t.commentsCount, t.dateTime)
+            select t
             from User u
                 join u.likedTweets t
             where u.username = :username""")
-    List<TweetPlainDTO> getLikedByUsername(@Param("username") String username);
+    List<Tweet> getLikedByUsername(@Param("username") String username);
+
+//    @Query("""
+//                select t
+//                from User u
+//                    left join u.subscriptions s
+//                    left join s.tweets t
+//                where u.username = :username and t.parent = null
+//
+//                union
+//
+//                select t
+//                from User u
+//                    left join u.tweets t
+//                where u.username = :username and t.parent = null
+//
+//            """)
+////    order by t.dateTime desc
+//    List<Tweet> getFromUserSubscriptions(@Param("username") String username);
 
     @Query("""
-                select new com.maxkors.tweeder.infrastructure.TweetPlainDTO(t.id, t.user, t.text, t.likesCount, t.commentsCount, t.dateTime)
+                select t
                 from User u
                     left join u.subscriptions s
                     left join s.tweets t
-                where u.username = :username and t.parent = null
-                
-                union
-                select new com.maxkors.tweeder.infrastructure.TweetPlainDTO(t.id, t.user, t.text, t.likesCount, t.commentsCount, t.dateTime)
-                from User u
-                    left join u.tweets t
-                where u.username = :username and t.parent = null
-                
+                where u.username = :username and t.parent = null              
             """)
 //    order by t.dateTime desc
-    List<TweetPlainDTO> getFromUserSubscriptions(@Param("username") String username);
+    List<Tweet> getFromUserSubscriptions(@Param("username") String username);
 
     @Query("""
                 select t.id

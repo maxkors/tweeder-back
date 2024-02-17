@@ -19,7 +19,7 @@ public class TweetService {
     private final UserRepository userRepository;
 
     @Transactional
-    public List<TweetPlainDTO> getAllTweets() {
+    public List<Tweet> getAllTweets() {
         return tweetRepository.getAll();
     }
 
@@ -47,11 +47,11 @@ public class TweetService {
     }
 
     @Transactional
-    public List<TweetPlainDTO> getTweetsByUsername(String username) {
+    public List<Tweet> getTweetsByUsername(String username) {
 //        return tweetRepository.getByUsername(username);
 
-        List<TweetPlainDTO> tweets = tweetRepository.getByUsername(username);
-        tweets.sort(Comparator.comparing(TweetPlainDTO::getDateTime).reversed());
+        List<Tweet> tweets = tweetRepository.getByUsernameAll(username);
+        tweets.sort(Comparator.comparing(Tweet::getDateTime).reversed());
 
         List<Long> tweetIds = new ArrayList<>();
 
@@ -59,7 +59,7 @@ public class TweetService {
 
         Set<Long> likedPostIds = this.tweetRepository.getLikedPostIdsFromList(username, tweetIds);
 
-        for (TweetPlainDTO tweet : tweets) {
+        for (Tweet tweet : tweets) {
             if (likedPostIds.contains(tweet.getId())) {
                 tweet.setLiked(true);
             }
@@ -69,8 +69,8 @@ public class TweetService {
     }
 
     @Transactional
-    public List<TweetPlainDTO> getLikedPostsByUsername(String username, User principal) {
-        List<TweetPlainDTO> likedTweets = tweetRepository.getLikedByUsername(username);
+    public List<Tweet> getLikedPostsByUsername(String username, User principal) {
+        List<Tweet> likedTweets = tweetRepository.getLikedByUsername(username);
 
         if (principal.getUsername().equals(username)) {
             likedTweets.forEach(tweet -> tweet.setLiked(true));
@@ -82,7 +82,7 @@ public class TweetService {
 
         Set<Long> principalLikedPostIds = this.tweetRepository.getLikedPostIdsFromList(principal.getUsername(), tweetIds);
 
-        for (TweetPlainDTO tweet : likedTweets) {
+        for (Tweet tweet : likedTweets) {
             if (principalLikedPostIds.contains(tweet.getId())) {
                 tweet.setLiked(true);
             }
@@ -128,9 +128,11 @@ public class TweetService {
     }
 
     @Transactional
-    public List<TweetPlainDTO> getTweetsFromUserSubscriptions(String username) {
-        List<TweetPlainDTO> tweets = tweetRepository.getFromUserSubscriptions(username);
-        tweets.sort(Comparator.comparing(TweetPlainDTO::getDateTime).reversed());
+    public List<Tweet> getTweetsFromUserSubscriptions(String username) {
+        List<Tweet> tweets = tweetRepository.getFromUserSubscriptions(username);
+        tweets.addAll(tweetRepository.getByUsernameParents(username));
+
+        tweets.sort(Comparator.comparing(Tweet::getDateTime).reversed());
 
         List<Long> tweetIds = new ArrayList<>();
 
@@ -138,7 +140,7 @@ public class TweetService {
 
         Set<Long> likedPostIds = this.tweetRepository.getLikedPostIdsFromList(username, tweetIds);
 
-        for (TweetPlainDTO tweet : tweets) {
+        for (Tweet tweet : tweets) {
             if (likedPostIds.contains(tweet.getId())) {
                 tweet.setLiked(true);
             }

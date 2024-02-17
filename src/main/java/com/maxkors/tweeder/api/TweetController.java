@@ -20,8 +20,9 @@ public class TweetController {
     private final TweetService tweetService;
 
     @GetMapping
-    List<TweetPlainDTO> getAllTweets() {
-        return tweetService.getAllTweets();
+    ResponseEntity<List<TweetChildView>> getAllTweets() {
+        List<Tweet> allTweets = tweetService.getAllTweets();
+        return ResponseEntity.ok().body(allTweets.stream().map(TweetChildView::from).toList());
     }
 
     @PostMapping
@@ -47,35 +48,11 @@ public class TweetController {
 
     @GetMapping("/{id}")
     ResponseEntity<TweetParentView> getTweetById(@AuthenticationPrincipal User principal, @PathVariable("id") Long id) {
-//        return tweetService.getTweetById(id)
-//                .map((tweet) -> ResponseEntity.ok().body(tweet))
-//                .orElseGet(() -> ResponseEntity.notFound().build());
-
         return tweetService.getTweetById(principal, id)
                 .map((tweet) -> {
-                    List<TweetChildView> children = tweet.getChildren().stream().map(child -> TweetChildView.builder()
-                            .id(child.getId())
-                            .user(child.getUser())
-                            .text(child.getText())
-                            .likesCount(child.getLikesCount())
-                            .commentsCount(child.getCommentsCount())
-                            .dateTime(child.getDateTime())
-                            .isLiked(child.isLiked())
-                            .build()).toList();
-
-                    TweetParentView parent = TweetParentView.builder()
-                            .id(tweet.getId())
-                            .user(tweet.getUser())
-                            .text(tweet.getText())
-                            .likesCount(tweet.getLikesCount())
-                            .commentsCount(tweet.getCommentsCount())
-                            .dateTime(tweet.getDateTime())
-                            .isLiked(tweet.isLiked())
-                            .children(children)
-                            .build();
-
+                    List<TweetChildView> children = tweet.getChildren().stream().map(TweetChildView::from).toList();
+                    TweetParentView parent = TweetParentView.from(tweet, children);
                     return ResponseEntity.ok().body(parent);
-
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -87,18 +64,21 @@ public class TweetController {
     }
 
     @GetMapping("/users/{username}")
-    ResponseEntity<List<TweetPlainDTO>> getTweetsByUsername(@PathVariable("username") String username) {
-        return ResponseEntity.ok().body(tweetService.getTweetsByUsername(username));
+    ResponseEntity<List<TweetChildView>> getTweetsByUsername(@PathVariable("username") String username) {
+        List<Tweet> tweets = tweetService.getTweetsByUsername(username);
+        return ResponseEntity.ok().body(tweets.stream().map(TweetChildView::from).toList());
     }
 
     @GetMapping("/users/{username}/liked")
-    ResponseEntity<List<TweetPlainDTO>> getLikedTweetsByUsername(@AuthenticationPrincipal User principal, @PathVariable("username") String username) {
-        return ResponseEntity.ok().body(tweetService.getLikedPostsByUsername(username, principal));
+    ResponseEntity<List<TweetChildView>> getLikedTweetsByUsername(@AuthenticationPrincipal User principal, @PathVariable("username") String username) {
+        List<Tweet> tweets = tweetService.getLikedPostsByUsername(username, principal);
+        return ResponseEntity.ok().body(tweets.stream().map(TweetChildView::from).toList());
     }
 
     @GetMapping("/feed")
-    ResponseEntity<List<TweetPlainDTO>> getTweetsFromUserSubscriptions(@AuthenticationPrincipal User principal) {
-        return ResponseEntity.ok().body(tweetService.getTweetsFromUserSubscriptions(principal.getUsername()));
+    ResponseEntity<List<TweetChildView>> getTweetsFromUserSubscriptions(@AuthenticationPrincipal User principal) {
+        List<Tweet> tweets = tweetService.getTweetsFromUserSubscriptions(principal.getUsername());
+        return ResponseEntity.ok().body(tweets.stream().map(TweetChildView::from).toList());
     }
 
     @PostMapping("/{id}/like")
