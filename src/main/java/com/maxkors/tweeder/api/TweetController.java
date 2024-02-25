@@ -28,21 +28,7 @@ public class TweetController {
     @PostMapping
     ResponseEntity<TweetParentView> createTweet(@AuthenticationPrincipal User principal, @RequestBody TweetRequest tweetRequest) {
         return tweetService.createTweet(principal, tweetRequest.text, tweetRequest.parentPostId)
-                .map(tweet -> {
-
-                    TweetParentView tweetParentView = TweetParentView.builder()
-                            .id(tweet.getId())
-                            .user(tweet.getUser())
-                            .text(tweet.getText())
-                            .likesCount(tweet.getLikesCount())
-                            .commentsCount(tweet.getCommentsCount())
-                            .dateTime(tweet.getDateTime())
-                            .isLiked(tweet.isLiked())
-                            .children(null)
-                            .build();
-
-                    return ResponseEntity.ok().body(tweetParentView);
-                })
+                .map(tweet -> ResponseEntity.ok().body(TweetParentView.from(tweet, null)))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
@@ -91,6 +77,24 @@ public class TweetController {
     ResponseEntity<?> removeLike(@AuthenticationPrincipal User principal, @PathVariable("id") Long id) {
         this.tweetService.removeLike(id, principal.getUsername());
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/bookmark")
+    ResponseEntity<?> addBookMark(@AuthenticationPrincipal User principal, @PathVariable("id") Long id) {
+        this.tweetService.addBookmark(id, principal.getUsername());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/bookmark")
+    ResponseEntity<?> removeBookMark(@AuthenticationPrincipal User principal, @PathVariable("id") Long id) {
+        this.tweetService.removeBookmark(id, principal.getUsername());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/bookmarked")
+    ResponseEntity<List<TweetChildView>> getBookmarked(@AuthenticationPrincipal User principal) {
+        List<Tweet> tweets = tweetService.getAllBookmarkedByUser(principal.getUsername());
+        return ResponseEntity.ok().body(tweets.stream().map(TweetChildView::from).toList());
     }
 
     record TweetRequest(String text, @Nullable Long parentPostId) {

@@ -55,6 +55,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/tweets/feed").authenticated()
                         .requestMatchers(HttpMethod.GET, "tweets/users/{username}/liked").authenticated()
                         .requestMatchers("/tweets/{id}/like").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/tweets/{id}/bookmark").authenticated()
+                        .requestMatchers(HttpMethod.DELETE,"/tweets/{id}/bookmark").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/tweets/bookmarked").authenticated()
 
 
                         .requestMatchers(HttpMethod.POST, "/comments").authenticated()

@@ -1,6 +1,5 @@
 package com.maxkors.tweeder.domain;
 
-import com.maxkors.tweeder.infrastructure.TweetPlainDTO;
 import com.maxkors.tweeder.infrastructure.TweetRepository;
 import com.maxkors.tweeder.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
@@ -31,9 +30,14 @@ public class TweetService {
             tweet.getChildren().forEach(child -> tweetIds.add(child.getId()));
 
             Set<Long> likedPostIds = this.tweetRepository.getLikedPostIdsFromList(principal.getUsername(), tweetIds);
+            Set<Long> bookmarkedPostIds = this.tweetRepository.getBookmarkedPostIdsFromList(principal.getUsername(), tweetIds);
 
             if (likedPostIds.contains(tweet.getId())) {
                 tweet.setLiked(true);
+            }
+
+            if (bookmarkedPostIds.contains(tweet.getId())) {
+                tweet.setBookmarked(true);
             }
 
             for (Tweet children : tweet.getChildren()) {
@@ -58,10 +62,15 @@ public class TweetService {
         tweets.forEach(tweet -> tweetIds.add(tweet.getId()));
 
         Set<Long> likedPostIds = this.tweetRepository.getLikedPostIdsFromList(username, tweetIds);
+        Set<Long> bookmarkedPostIds = this.tweetRepository.getBookmarkedPostIdsFromList(username, tweetIds);
 
         for (Tweet tweet : tweets) {
             if (likedPostIds.contains(tweet.getId())) {
                 tweet.setLiked(true);
+            }
+
+            if (bookmarkedPostIds.contains(tweet.getId())) {
+                tweet.setBookmarked(true);
             }
         }
 
@@ -81,10 +90,15 @@ public class TweetService {
         likedTweets.forEach(tweet -> tweetIds.add(tweet.getId()));
 
         Set<Long> principalLikedPostIds = this.tweetRepository.getLikedPostIdsFromList(principal.getUsername(), tweetIds);
+        Set<Long> bookmarkedPostIds = this.tweetRepository.getBookmarkedPostIdsFromList(username, tweetIds);
 
         for (Tweet tweet : likedTweets) {
             if (principalLikedPostIds.contains(tweet.getId())) {
                 tweet.setLiked(true);
+            }
+
+            if (bookmarkedPostIds.contains(tweet.getId())) {
+                tweet.setBookmarked(true);
             }
         }
 
@@ -129,8 +143,8 @@ public class TweetService {
 
     @Transactional
     public List<Tweet> getTweetsFromUserSubscriptions(String username) {
-        List<Tweet> tweets = tweetRepository.getFromUserSubscriptions(username);
-        tweets.addAll(tweetRepository.getByUsernameParents(username));
+        List<Tweet> tweets = this.tweetRepository.getFromUserSubscriptions(username);
+        tweets.addAll(this.tweetRepository.getByUsernameParents(username));
 
         tweets.sort(Comparator.comparing(Tweet::getDateTime).reversed());
 
@@ -139,10 +153,15 @@ public class TweetService {
         tweets.forEach(tweet -> tweetIds.add(tweet.getId()));
 
         Set<Long> likedPostIds = this.tweetRepository.getLikedPostIdsFromList(username, tweetIds);
+        Set<Long> bookmarkedPostIds = this.tweetRepository.getBookmarkedPostIdsFromList(username, tweetIds);
 
         for (Tweet tweet : tweets) {
             if (likedPostIds.contains(tweet.getId())) {
                 tweet.setLiked(true);
+            }
+
+            if (bookmarkedPostIds.contains(tweet.getId())) {
+                tweet.setBookmarked(true);
             }
         }
 
@@ -165,5 +184,41 @@ public class TweetService {
                     tweet.getLikes().remove(user);
                     tweet.setLikesCount(tweet.getLikesCount() - 1L);
                 }));
+    }
+
+    @Transactional
+    public void addBookmark(Long postId, String username) {
+        this.userRepository.getByUsername(username).ifPresent(user ->
+                this.tweetRepository.getByIdWithBookmarkers(postId).ifPresent(tweet -> {
+                    tweet.getBookmarkers().add(user);
+                }));
+    }
+
+    @Transactional
+    public void removeBookmark(Long postId, String username) {
+        this.userRepository.getByUsername(username).ifPresent(user ->
+                this.tweetRepository.getByIdWithBookmarkers(postId).ifPresent(tweet -> {
+                    tweet.getBookmarkers().remove(user);
+                }));
+    }
+
+    @Transactional
+    public List<Tweet> getAllBookmarkedByUser(String username) {
+        List<Tweet> tweetsBookmarkedByUser = this.tweetRepository.getAllBookmarkedByUser(username);
+
+        List<Long> tweetIds = new ArrayList<>();
+        tweetsBookmarkedByUser.forEach(tweet -> tweetIds.add(tweet.getId()));
+
+        Set<Long> likedPostIds = this.tweetRepository.getLikedPostIdsFromList(username, tweetIds);
+
+        for (Tweet tweet : tweetsBookmarkedByUser) {
+            tweet.setBookmarked(true);
+
+            if (likedPostIds.contains(tweet.getId())) {
+                tweet.setLiked(true);
+            }
+        }
+
+        return tweetsBookmarkedByUser;
     }
 }

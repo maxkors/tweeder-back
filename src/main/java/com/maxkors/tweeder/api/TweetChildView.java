@@ -20,6 +20,7 @@ public class TweetChildView {
     private LocalDateTime dateTime;
     private List<Media> media;
     private boolean isLiked;
+    private boolean isBookmarked;
 
     public static TweetChildView from(Tweet tweet) {
         return TweetChildView.builder()
@@ -31,6 +32,7 @@ public class TweetChildView {
                 .dateTime(tweet.getDateTime())
                 .media(tweet.getMedia())
                 .isLiked(tweet.isLiked())
+                .isBookmarked(tweet.isBookmarked())
                 .build();
     }
 }

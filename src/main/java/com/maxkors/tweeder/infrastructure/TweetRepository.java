@@ -31,6 +31,20 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
     Optional<Tweet> getByIdWithLikes(@Param("id") Long id);
 
     @Query("""
+            select distinct t
+            from Tweet t
+                left join t.bookmarkers
+            where t.id = :id""")
+    Optional<Tweet> getByIdWithBookmarkers(@Param("id") Long id);
+
+    @Query("""
+            select distinct t
+            from Tweet t
+                left join t.bookmarkers
+            where t.user.username = :username""")
+    List<Tweet> getAllBookmarkedByUser(@Param("username") String username);
+
+    @Query("""
             select t
             from Tweet t
                 join t.user
@@ -86,4 +100,12 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
                 where l.username = :username and t.id in :ids
             """)
     Set<Long> getLikedPostIdsFromList(String username, List<Long> ids);
+
+    @Query("""
+                select t.id
+                from Tweet t
+                left join t.bookmarkers b
+                where b.username = :username and t.id in :ids
+            """)
+    Set<Long> getBookmarkedPostIdsFromList(String username, List<Long> ids);
 }

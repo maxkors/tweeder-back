@@ -75,6 +75,13 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "tweet_id"))
     private List<Tweet> likedTweets = new ArrayList<>();
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "bookmark",
+            joinColumns = @JoinColumn(name = "app_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tweet_id"))
+    private List<Tweet> bookmarks = new ArrayList<>();
+
     public void addRole(Role role) {
         this.roles.add(role);
     }

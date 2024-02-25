@@ -1,3 +1,4 @@
+drop table if exists bookmark;
 drop table if exists user_like;
 drop table if exists subscription;
 drop table if exists comment;
@@ -118,6 +119,14 @@ create table user_like
     primary key (app_user_id, tweet_id)
 );
 
+create table bookmark
+(
+    app_user_id int not null,
+    tweet_id    int not null,
+    foreign key (app_user_id) references app_user (id),
+    foreign key (tweet_id) references tweet (id),
+    primary key (app_user_id, tweet_id)
+);
 
 insert into app_user(username, password, name, email)
 values ('maximus', '$2a$10$PdYtIQYstvMYdtDuytzTJ.XyBRINgpCWPIcyi2R/txXuRPkDwcFSG', 'Maximus', 'mxms@gmail.com'),
@@ -181,6 +190,10 @@ values (1, 1),
        (1, 3),
        (2, 1),
        (2, 2);
+
+insert into bookmark
+values (1, 1),
+       (1, 4);
 
 
 -- select id, NULL as tweet_id, app_user_id, text, likes, date_time from tweet t

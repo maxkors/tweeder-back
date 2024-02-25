@@ -18,9 +18,10 @@ public class TweetParentView {
     private Long likesCount;
     private Long commentsCount;
     private LocalDateTime dateTime;
-    private boolean isLiked;
     private List<TweetChildView> children;
     private List<Media> media;
+    private boolean isLiked;
+    private boolean isBookmarked;
 
     public static TweetParentView from(Tweet tweet, List<TweetChildView> children) {
         return TweetParentView.builder()
@@ -33,6 +34,7 @@ public class TweetParentView {
                 .media(tweet.getMedia())
                 .children(children)
                 .isLiked(tweet.isLiked())
+                .isBookmarked(tweet.isBookmarked())
                 .build();
     }
 }

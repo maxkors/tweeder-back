@@ -56,6 +56,13 @@ public class Tweet {
             inverseJoinColumns = @JoinColumn(name = "app_user_id"))
     private Set<User> likes = new HashSet<>();
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "bookmark",
+            joinColumns = @JoinColumn(name = "tweet_id"),
+            inverseJoinColumns = @JoinColumn(name = "app_user_id"))
+    private Set<User> bookmarkers = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Tweet parent;
@@ -68,4 +75,7 @@ public class Tweet {
 
     @Transient
     private boolean isLiked;
+
+    @Transient
+    private boolean isBookmarked;
 }
