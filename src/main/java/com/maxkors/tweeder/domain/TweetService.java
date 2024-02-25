@@ -205,6 +205,7 @@ public class TweetService {
     @Transactional
     public List<Tweet> getAllBookmarkedByUser(String username) {
         List<Tweet> tweetsBookmarkedByUser = this.tweetRepository.getAllBookmarkedByUser(username);
+        tweetsBookmarkedByUser.sort(Comparator.comparing(Tweet::getDateTime).reversed());
 
         List<Long> tweetIds = new ArrayList<>();
         tweetsBookmarkedByUser.forEach(tweet -> tweetIds.add(tweet.getId()));

@@ -38,10 +38,10 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
     Optional<Tweet> getByIdWithBookmarkers(@Param("id") Long id);
 
     @Query("""
-            select distinct t
-            from Tweet t
-                left join t.bookmarkers
-            where t.user.username = :username""")
+            select b
+            from User u
+                left join u.bookmarks b
+            where u.username = :username""")
     List<Tweet> getAllBookmarkedByUser(@Param("username") String username);
 
     @Query("""
@@ -88,7 +88,7 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
                 from User u
                     left join u.subscriptions s
                     left join s.tweets t
-                where u.username = :username and t.parent = null              
+                where u.username = :username and t.parent = null
             """)
 //    order by t.dateTime desc
     List<Tweet> getFromUserSubscriptions(@Param("username") String username);
