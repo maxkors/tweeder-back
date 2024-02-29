@@ -1,6 +1,7 @@
 package com.maxkors.tweeder.api;
 
 import com.maxkors.tweeder.domain.UserService;
+import com.maxkors.tweeder.infrastructure.ProfileCardDTO;
 import com.maxkors.tweeder.infrastructure.ProfileDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +42,10 @@ public class UserController {
         this.userService.removeFollower(principal.getUsername(), username);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/search")
+    ResponseEntity<List<ProfileCardDTO>> findMatchingProfiles(@RequestParam("name") String name) {
+        return  ResponseEntity.ok().body(this.userService.getMatchingProfiles(name));
     }
 }

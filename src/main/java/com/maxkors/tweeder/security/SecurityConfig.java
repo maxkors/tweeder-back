@@ -68,6 +68,7 @@ public class SecurityConfig {
                         .requestMatchers("/users/{username}").authenticated()
                         .requestMatchers("/users").hasRole(RoleName.ROLE_ADMIN.value())
                         .requestMatchers("/users/{username}/follow").authenticated()
+                        .requestMatchers("/users/search").authenticated()
 
                         .requestMatchers("/auth/signin").permitAll()
 //                        .requestMatchers(HttpMethod.GET, "/tweets/liked").authenticated()

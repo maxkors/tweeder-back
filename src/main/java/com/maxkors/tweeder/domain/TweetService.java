@@ -81,11 +81,6 @@ public class TweetService {
     public List<Tweet> getLikedPostsByUsername(String username, User principal) {
         List<Tweet> likedTweets = tweetRepository.getLikedByUsername(username);
 
-        if (principal.getUsername().equals(username)) {
-            likedTweets.forEach(tweet -> tweet.setLiked(true));
-            return likedTweets.reversed();
-        }
-
         List<Long> tweetIds = new ArrayList<>();
         likedTweets.forEach(tweet -> tweetIds.add(tweet.getId()));
 
@@ -101,7 +96,6 @@ public class TweetService {
                 tweet.setBookmarked(true);
             }
         }
-
 
         return likedTweets.reversed();
     }
@@ -136,6 +130,11 @@ public class TweetService {
         userRepository.getByUsername(principal.getUsername()).ifPresent(user ->
                 tweetRepository.getByIdEntirely(tweetId).ifPresent(tweet -> {
                     if (user.getId().equals(tweet.getUser().getId())) {
+                        Tweet parent = tweet.getParent();
+                        if (parent != null) {
+                            parent.setCommentsCount(parent.getCommentsCount() - 1L);
+                        }
+
                         tweetRepository.delete(tweet);
                     }
                 }));

@@ -1,5 +1,6 @@
 package com.maxkors.tweeder.domain;
 
+import com.maxkors.tweeder.infrastructure.ProfileCardDTO;
 import com.maxkors.tweeder.infrastructure.ProfileDTO;
 import com.maxkors.tweeder.infrastructure.UserRepository;
 import com.maxkors.tweeder.security.User;
@@ -48,5 +49,10 @@ public class UserService {
         this.userRepository.findByUsername(subjectUsername)
                 .ifPresent(subject -> this.userRepository.findByUsername(followerUsername)
                         .ifPresent(follower -> subject.getSubscribers().remove(follower)));
+    }
+
+    @Transactional
+    public List<ProfileCardDTO> getMatchingProfiles(String criteria) {
+        return this.userRepository.getAllMatchingProfiles(criteria);
     }
 }
