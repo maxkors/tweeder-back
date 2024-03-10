@@ -1,3 +1,6 @@
+drop table if exists message;
+drop table if exists app_user__chat;
+drop table if exists chat;
 drop table if exists bookmark;
 drop table if exists user_like;
 drop table if exists subscription;
@@ -127,6 +130,31 @@ create table bookmark
     foreign key (tweet_id) references tweet (id),
     primary key (app_user_id, tweet_id)
 );
+
+create table chat
+(
+    id serial primary key
+);
+
+create table app_user__chat
+(
+    app_user_id int not null,
+    chat_id int not null,
+    foreign key (app_user_id) references app_user (id),
+    foreign key (chat_id) references chat (id),
+    primary key (app_user_id, chat_id)
+);
+
+create table message
+(
+    id serial primary key,
+    chat_id int not null,
+    sender_id int not null,
+    text varchar(200),
+    foreign key (chat_id) references chat (id),
+    foreign key (sender_id) references app_user (id)
+);
+
 
 insert into app_user(username, password, name, email)
 values ('maximus', '$2a$10$PdYtIQYstvMYdtDuytzTJ.XyBRINgpCWPIcyi2R/txXuRPkDwcFSG', 'Maximus', 'mxms@gmail.com'),

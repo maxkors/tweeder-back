@@ -41,6 +41,13 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .cors(configurer -> configurer
+//                        .configurationSource(corsConfigurationSource()))
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(configurer -> configurer
+//                        .requestMatchers("/**").permitAll());
+
         http
                 .cors(configurer -> configurer
                         .configurationSource(corsConfigurationSource()))
@@ -69,6 +76,10 @@ public class SecurityConfig {
                         .requestMatchers("/users").hasRole(RoleName.ROLE_ADMIN.value())
                         .requestMatchers("/users/{username}/follow").authenticated()
                         .requestMatchers("/users/search").authenticated()
+
+                        .requestMatchers("/gs-guide-websocket").permitAll()
+                        .requestMatchers("/secured", "/secured/**", "/secured/socket", "/secured/success").permitAll()
+                        .requestMatchers("/ws", "/ws/**", "/ws/socket", "/ws/success").permitAll()
 
                         .requestMatchers("/auth/signin").permitAll()
 //                        .requestMatchers(HttpMethod.GET, "/tweets/liked").authenticated()
