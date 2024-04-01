@@ -1,6 +1,7 @@
 package com.maxkors.tweeder.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.maxkors.tweeder.domain.Chat;
 import com.maxkors.tweeder.domain.Tweet;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -81,6 +82,13 @@ public class User {
             joinColumns = @JoinColumn(name = "app_user_id"),
             inverseJoinColumns = @JoinColumn(name = "tweet_id"))
     private List<Tweet> bookmarks = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "app_user__chat",
+            joinColumns = @JoinColumn(name = "app_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "chat_id"))
+    private List<Chat> chats;
 
     public void addRole(Role role) {
         this.roles.add(role);

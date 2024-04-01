@@ -148,11 +148,11 @@ create table app_user__chat
 create table message
 (
     id serial primary key,
-    chat_id int not null,
     sender_id int not null,
+    chat_id int not null,
     text varchar(200),
-    foreign key (chat_id) references chat (id),
-    foreign key (sender_id) references app_user (id)
+    foreign key (sender_id) references app_user (id),
+    foreign key (chat_id) references chat (id)
 );
 
 
