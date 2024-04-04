@@ -23,6 +23,16 @@ public class ChatService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Transactional
+    public List<Chat> getAllByUsername(String username) {
+        return this.chatRepository.getAllByUsername(username);
+    }
+
+    @Transactional
+    public List<Message> getAllChatMessages(Long id) {
+        return chatRepository.getAllMessagesByChatId(id);
+    }
+
+    @Transactional
     public void sendMessageFromUser(MessagePayload messagePayload, String senderUsername) {
         Long chatId = messagePayload.getChatId();
 
@@ -58,8 +68,6 @@ public class ChatService {
                             .chat(chat)
                             .text(messagePayload.getContent())
                             .build();
-
-//                    chat.addMessage(message);
 
                     Message savedMessage = this.messageRepository.save(message);
 

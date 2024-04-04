@@ -1,34 +1,34 @@
 package com.maxkors.tweeder.api;
 
-import com.maxkors.tweeder.domain.Message;
 import com.maxkors.tweeder.domain.ChatService;
+import com.maxkors.tweeder.domain.Message;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.annotation.SendToUser;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
+import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/chats")
 @RequiredArgsConstructor
-@Slf4j
 public class ChatController {
 
     private final ChatService chatService;
 
-    @MessageMapping("/chat/sendMessage")
-    @SendToUser("/topic/public")
-    public void sendMessage(@Payload MessagePayload message, Principal principal) {
-        log.info("{}: {}", principal.getName(), message.getContent());
-        this.chatService.sendMessageFromUser(message, principal.getName());
+    @GetMapping
+    ResponseEntity<List<ChatWithParticipantsDTO>> getAllUsersChats(@AuthenticationPrincipal User principal) {
+        List<ChatWithParticipantsDTO> chats = this.chatService.getAllByUsername(principal.getUsername()).stream()
+                .map(ChatWithParticipantsDTO::fromChat).toList();
+        return ResponseEntity.ok().body(chats);
     }
 
-//    @MessageMapping("/chat/addUser")
-//    @SendTo("/topic/public")
-//    public ChatMessage addUser(@Payload ChatMessage message, SimpMessageHeaderAccessor headerAccessor) {
-//        headerAccessor.getSessionAttributes().put("user", message.getSender());
-//        return message;
-//    }
+    @GetMapping("/{id}/messages")
+    ResponseEntity<List<Message>> getChatMessages(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body(this.chatService.getAllChatMessages(id));
+    }
 }

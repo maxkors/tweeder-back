@@ -82,6 +82,8 @@ public class SecurityConfig {
                         .requestMatchers("/ws", "/ws/**", "/ws/socket", "/ws/success").permitAll()
 
                         .requestMatchers("/auth/signin").permitAll()
+
+                        .requestMatchers(("/chats/**")).authenticated()
 //                        .requestMatchers(HttpMethod.GET, "/tweets/liked").authenticated()
 //                        .requestMatchers("/tweets/{id}/like").authenticated()
 //                        .requestMatchers(HttpMethod.GET, "/profile").authenticated()
