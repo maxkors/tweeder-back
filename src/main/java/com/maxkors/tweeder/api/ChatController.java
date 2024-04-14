@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +27,15 @@ public class ChatController {
     @GetMapping("/{id}/messages")
     ResponseEntity<List<Message>> getChatMessages(@PathVariable("id") Long id) {
         return ResponseEntity.ok().body(this.chatService.getAllChatMessages(id));
+    }
+
+    @PostMapping
+    ResponseEntity<ChatWithParticipantsDTO> createChat(@RequestBody NewChatBody newChatBody, @AuthenticationPrincipal User principal) {
+        return this.chatService.createChat(principal.getUsername(), newChatBody.username)
+                .map(chat -> ResponseEntity.ok().body(ChatWithParticipantsDTO.fromChat(chat)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    private record NewChatBody(String username) {
     }
 }

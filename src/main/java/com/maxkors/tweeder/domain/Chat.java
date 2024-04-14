@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -33,7 +34,7 @@ public class Chat {
     @JoinTable(name = "app_user__chat",
             joinColumns = @JoinColumn(name = "chat_id"),
             inverseJoinColumns = @JoinColumn(name = "app_user_id"))
-    private List<User> participants;
+    private Set<User> participants;
 
     public void addMessage (Message message) {
         this.messages.add(message);

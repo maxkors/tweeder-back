@@ -223,6 +223,17 @@ insert into bookmark
 values (1, 1),
        (1, 4);
 
+insert into chat
+values (nextval('chat_id_seq'));
+
+insert into app_user__chat
+values (1, 1),
+       (2, 1);
+
+insert into message(sender_id, chat_id, text)
+values (1, 1, 'hi'),
+       (2, 1, 'halo');
+
 
 -- select id, NULL as tweet_id, app_user_id, text, likes, date_time from tweet t
 -- where t.app_user_id = 1;

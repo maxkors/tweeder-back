@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,18 @@ public class ChatService {
     @Transactional
     public List<Chat> getAllByUsername(String username) {
         return this.chatRepository.getAllByUsername(username);
+    }
+
+    // TODO: add check if chat exists
+    @Transactional
+    public Optional<Chat> createChat(String inviterUsername, String inviteeUsername) {
+        return this.userRepository.getByUsername(inviterUsername).flatMap(inviter ->
+                this.userRepository.getByUsername(inviteeUsername).map(invitee -> {
+                    Chat chat = Chat.builder()
+                            .participants(Set.of(inviter, invitee))
+                            .build();
+                    return this.chatRepository.save(chat);
+                }));
     }
 
     @Transactional
@@ -46,7 +59,7 @@ public class ChatService {
                             .build();
 
                     Chat chat = Chat.builder()
-                            .participants(List.of(sender, invited))
+                            .participants(Set.of(sender, invited))
                             .messages(List.of(message))
                             .build();
 
