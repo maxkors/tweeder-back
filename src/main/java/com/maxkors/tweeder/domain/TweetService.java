@@ -145,6 +145,8 @@ public class TweetService {
         List<Tweet> tweets = this.tweetRepository.getFromUserSubscriptions(username);
         tweets.addAll(this.tweetRepository.getByUsernameParents(username));
 
+        if (tweets.isEmpty()) return tweets;
+
         tweets.sort(Comparator.comparing(Tweet::getDateTime).reversed());
 
         List<Long> tweetIds = new ArrayList<>();

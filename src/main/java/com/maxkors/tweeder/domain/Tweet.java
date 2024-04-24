@@ -78,4 +78,9 @@ public class Tweet {
 
     @Transient
     private boolean isBookmarked;
+
+    @Override
+    public String toString() {
+        return this.getText();
+    }
 }

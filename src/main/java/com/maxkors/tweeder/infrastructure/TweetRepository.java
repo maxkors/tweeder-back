@@ -40,7 +40,7 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
     @Query("""
             select b
             from User u
-                left join u.bookmarks b
+                join u.bookmarks b
             where u.username = :username""")
     List<Tweet> getAllBookmarkedByUser(@Param("username") String username);
 
@@ -86,8 +86,8 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
     @Query("""
                 select t
                 from User u
-                    left join u.subscriptions s
-                    left join s.tweets t
+                    join u.subscriptions s
+                    join s.tweets t
                 where u.username = :username and t.parent = null
             """)
 //    order by t.dateTime desc
