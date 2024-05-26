@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
 #  servlet:
 #    context-path: /api
 
@@ -27,3 +27,4 @@ auth:
 aws:
   region: ${AWS_REGION}
   bucket-name: tweederstorage
+  base-url: https://tweederstorage.s3.eu-north-1.amazonaws.com/
