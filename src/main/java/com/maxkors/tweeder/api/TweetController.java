@@ -1,5 +1,6 @@
 package com.maxkors.tweeder.api;
 
+import com.maxkors.tweeder.domain.NewTweetDTO;
 import com.maxkors.tweeder.domain.Tweet;
 import com.maxkors.tweeder.domain.TweetService;
 import com.maxkors.tweeder.infrastructure.TweetPlainDTO;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,9 +27,12 @@ public class TweetController {
         return ResponseEntity.ok().body(allTweets.stream().map(TweetChildView::from).toList());
     }
 
-    @PostMapping
-    ResponseEntity<TweetParentView> createTweet(@AuthenticationPrincipal User principal, @RequestBody TweetRequest tweetRequest) {
-        return tweetService.createTweet(principal, tweetRequest.text, tweetRequest.parentPostId)
+    @PostMapping(consumes = "multipart/form-data")
+    ResponseEntity<TweetParentView> createTweet(@AuthenticationPrincipal User principal,
+                                                @RequestParam(value = "media") MultipartFile media,
+                                                @RequestParam(value = "parentPostId") @Nullable Long parentPostId,
+                                                @RequestParam(value = "text") String text) {
+        return tweetService.createTweet(principal, new NewTweetDTO(text, parentPostId, List.of(media)))
                 .map(tweet -> ResponseEntity.ok().body(TweetParentView.from(tweet, null)))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
@@ -97,6 +102,5 @@ public class TweetController {
         return ResponseEntity.ok().body(tweets.stream().map(TweetChildView::from).toList());
     }
 
-    record TweetRequest(String text, @Nullable Long parentPostId) {
-    }
+    private record NewTweetData(String text, @Nullable Long parentPostId) {}
 }

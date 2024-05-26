@@ -1,5 +1,6 @@
 package com.maxkors.tweeder.domain;
 
+import com.maxkors.tweeder.infrastructure.MediaRepository;
 import com.maxkors.tweeder.infrastructure.TweetRepository;
 import com.maxkors.tweeder.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +18,8 @@ public class TweetService {
 
     private final TweetRepository tweetRepository;
     private final UserRepository userRepository;
+    private final MediaRepository mediaRepository;
+    private final StorageService storageService;
 
     @Transactional
     public List<Tweet> getAllTweets() {
@@ -101,26 +105,47 @@ public class TweetService {
     }
 
     @Transactional
-    public Optional<Tweet> createTweet(User principal, String content, Long parentPostId) {
+    public Optional<Tweet> createTweet(User principal, NewTweetDTO newTweet) {
         return this.userRepository.getByUsername(principal.getUsername()).map(user -> {
             Tweet parent = null;
 
-            if (parentPostId != null) {
-                parent = this.tweetRepository.getByIdEntirely(parentPostId)
+            if (newTweet.parentPostId() != null) {
+                parent = this.tweetRepository.getByIdEntirely(newTweet.parentPostId())
                         .orElseThrow(() -> new IllegalArgumentException("Wrong parent post id"));
                 parent.setCommentsCount(parent.getCommentsCount() + 1L);
             }
 
             Tweet tweet = Tweet.builder()
                     .user(user)
-                    .text(content)
+                    .text(newTweet.text())
                     .likesCount(0L)
                     .commentsCount(0L)
                     .dateTime(LocalDateTime.now())
                     .parent(parent)
                     .build();
 
-            return tweetRepository.save(tweet);
+            List<Media> mediaList = newTweet.files().stream().map(file -> {
+                String uploadedFileName = this.storageService.uploadFile(file);
+
+                return Media.builder()
+                        .urn(uploadedFileName)
+                        .type(file.getContentType())
+                        .tweet(tweet)
+                        .build();
+            }).toList();
+
+//            List<Media> mediaList = newTweet.files().stream().map(mediaDTO ->
+//                            Media.builder()
+//                                    .urn(mediaDTO.name())
+//                                    .type(mediaDTO.type())
+//                                    .tweet(tweet)
+//                                    .build())
+//                    .toList();
+
+            Tweet savedTweet = this.tweetRepository.save(tweet);
+            this.mediaRepository.saveAll(mediaList);
+
+            return savedTweet;
         });
     }
 
