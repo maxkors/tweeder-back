@@ -4,6 +4,8 @@ import com.maxkors.tweeder.domain.NewTweetDTO;
 import com.maxkors.tweeder.domain.Tweet;
 import com.maxkors.tweeder.domain.TweetService;
 import com.maxkors.tweeder.infrastructure.TweetPlainDTO;
+
+import io.jsonwebtoken.lang.Collections;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +31,11 @@ public class TweetController {
 
     @PostMapping(consumes = "multipart/form-data")
     ResponseEntity<TweetParentView> createTweet(@AuthenticationPrincipal User principal,
-                                                @RequestParam(value = "media") MultipartFile media,
+                                                @RequestParam(value = "media") @Nullable MultipartFile media,
                                                 @RequestParam(value = "parentPostId") @Nullable Long parentPostId,
                                                 @RequestParam(value = "text") String text) {
-        return tweetService.createTweet(principal, new NewTweetDTO(text, parentPostId, List.of(media)))
+                                                    System.out.println(media);
+        return tweetService.createTweet(principal, new NewTweetDTO(text, parentPostId, media.isEmpty() ? Collections.emptyList() : List.of(media)))
                 .map(tweet -> ResponseEntity.ok().body(TweetParentView.from(tweet, null)))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }

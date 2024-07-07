@@ -124,6 +124,10 @@ public class TweetService {
                     .parent(parent)
                     .build();
 
+            if (newTweet.files().isEmpty()) {
+                return this.tweetRepository.save(tweet);
+            }
+
             List<Media> mediaList = newTweet.files().stream().map(file -> {
                 String uploadedFileName = this.storageService.uploadFile(file);
 
