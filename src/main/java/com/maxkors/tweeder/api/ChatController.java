@@ -1,5 +1,6 @@
 package com.maxkors.tweeder.api;
 
+import com.maxkors.tweeder.domain.Chat;
 import com.maxkors.tweeder.domain.ChatService;
 import com.maxkors.tweeder.domain.Message;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class ChatController {
 
     @GetMapping
     ResponseEntity<List<ChatWithParticipantsDTO>> getAllUsersChats(@AuthenticationPrincipal User principal) {
+//        Long id  = ((com.maxkors.tweeder.security.User) principal).getId();
         List<ChatWithParticipantsDTO> chats = this.chatService.getAllByUsername(principal.getUsername()).stream()
                 .map(ChatWithParticipantsDTO::fromChat).toList();
         return ResponseEntity.ok().body(chats);
@@ -30,9 +32,9 @@ public class ChatController {
     }
 
     @PostMapping
-    ResponseEntity<ChatWithParticipantsDTO> createChat(@RequestBody NewChatBody newChatBody, @AuthenticationPrincipal User principal) {
-        return this.chatService.createChat(principal.getUsername(), newChatBody.username)
-                .map(chat -> ResponseEntity.ok().body(ChatWithParticipantsDTO.fromChat(chat)))
+    ResponseEntity<Chat> createChat(@RequestBody NewChatBody newChatBody, @AuthenticationPrincipal User principal) {
+        return this.chatService.getChatByUsernames(principal.getUsername(), newChatBody.username)
+                .map(chat -> ResponseEntity.ok().body(chat))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 

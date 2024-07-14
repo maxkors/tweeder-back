@@ -28,16 +28,17 @@ public class ChatService {
         return this.chatRepository.getAllByUsername(username);
     }
 
-    // TODO: add check if chat exists
     @Transactional
-    public Optional<Chat> createChat(String inviterUsername, String inviteeUsername) {
+    public Optional<Chat> getChatByUsernames(String inviterUsername, String inviteeUsername) {
         return this.userRepository.getByUsername(inviterUsername).flatMap(inviter ->
-                this.userRepository.getByUsername(inviteeUsername).map(invitee -> {
-                    Chat chat = Chat.builder()
-                            .participants(Set.of(inviter, invitee))
-                            .build();
-                    return this.chatRepository.save(chat);
-                }));
+                this.userRepository.getByUsername(inviteeUsername).map(invitee ->
+                        this.chatRepository.getChatByParticipantUsernames(inviter.getUsername(), invitee.getUsername())
+                                .orElseGet(() -> {
+                                    Chat chat = Chat.builder()
+                                            .participants(Set.of(inviter, invitee))
+                                            .build();
+                                    return this.chatRepository.save(chat);
+                                })));
     }
 
     @Transactional

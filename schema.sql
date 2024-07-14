@@ -139,7 +139,7 @@ create table chat
 create table app_user__chat
 (
     app_user_id int not null,
-    chat_id int not null,
+    chat_id     int not null,
     foreign key (app_user_id) references app_user (id),
     foreign key (chat_id) references chat (id),
     primary key (app_user_id, chat_id)
@@ -147,10 +147,10 @@ create table app_user__chat
 
 create table message
 (
-    id serial primary key,
+    id        serial primary key,
     sender_id int not null,
-    chat_id int not null,
-    text varchar(200),
+    chat_id   int not null,
+    text      varchar(200),
     foreign key (sender_id) references app_user (id),
     foreign key (chat_id) references chat (id)
 );
@@ -268,3 +268,24 @@ values (1, 1, 'hi'),
 -- group by t.id, t.date_time
 -- order by t.date_time desc;
 
+
+select *
+from app_user__chat;
+
+
+select auc.chat_id
+from app_user__chat auc
+group by auc.chat_id
+having bool_and(auc.app_user_id in (1, null));
+
+
+select auc.chat_id as id
+from app_user__chat auc
+group by auc.chat_id
+having bool_and(auc.app_user_id in (coalesce((select u.id from app_user u where u.username = 'maximus'), -1),
+                                    coalesce((select u.id from app_user u where u.username = 'commodus'), -1)));
+
+
+select u.id
+from app_user u
+where u.username = 'maximuss';
