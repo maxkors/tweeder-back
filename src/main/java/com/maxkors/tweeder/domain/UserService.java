@@ -33,6 +33,11 @@ public class UserService {
     }
 
     @Transactional
+    public List<User> getSubscribers(String username) {
+        return userRepository.getSubscribers(username);
+    }
+
+    @Transactional
     public ProfileDTO getProfile(String username, org.springframework.security.core.userdetails.User principal) {
         return userRepository.getProfile(username, principal.getUsername());
     }

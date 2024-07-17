@@ -44,8 +44,18 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{username}/subscriptions")
+    ResponseEntity<List<com.maxkors.tweeder.security.User>> getSubscriptions(@PathVariable("username") String username) {
+        return ResponseEntity.ok().body(this.userService.getSubscriptions(username));
+    }
+
+    @GetMapping("/{username}/subscribers")
+    ResponseEntity<List<com.maxkors.tweeder.security.User>> getSubscribers(@PathVariable("username") String username) {
+        return ResponseEntity.ok().body(this.userService.getSubscribers(username));
+    }
+
     @GetMapping("/search")
     ResponseEntity<List<ProfileCardDTO>> findMatchingProfiles(@RequestParam("name") String name) {
-        return  ResponseEntity.ok().body(this.userService.getMatchingProfiles(name));
+        return ResponseEntity.ok().body(this.userService.getMatchingProfiles(name));
     }
 }

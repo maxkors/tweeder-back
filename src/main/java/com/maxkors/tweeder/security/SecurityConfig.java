@@ -76,6 +76,9 @@ public class SecurityConfig {
                         .requestMatchers("/users").hasRole(RoleName.ROLE_ADMIN.value())
                         .requestMatchers("/users/{username}/follow").authenticated()
                         .requestMatchers("/users/search").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/users/{username}/subscriptions").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/users/{username}/subscribers").authenticated()
+
 
                         .requestMatchers("/gs-guide-websocket").permitAll()
                         .requestMatchers("/secured", "/secured/**", "/secured/socket", "/secured/success").permitAll()
