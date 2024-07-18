@@ -65,6 +65,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/tweets/{id}/bookmark").authenticated()
                         .requestMatchers(HttpMethod.DELETE,"/tweets/{id}/bookmark").authenticated()
                         .requestMatchers(HttpMethod.GET,"/tweets/bookmarked").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/tweets/recommended").authenticated()
 
 
                         .requestMatchers(HttpMethod.POST, "/comments").authenticated()

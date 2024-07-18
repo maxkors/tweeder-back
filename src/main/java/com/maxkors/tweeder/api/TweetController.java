@@ -101,7 +101,13 @@ public class TweetController {
 
     @GetMapping("/bookmarked")
     ResponseEntity<List<TweetChildView>> getBookmarked(@AuthenticationPrincipal User principal) {
-        List<Tweet> tweets = tweetService.getAllBookmarkedByUser(principal.getUsername());
+        List<Tweet> tweets = this.tweetService.getAllBookmarkedByUser(principal.getUsername());
+        return ResponseEntity.ok().body(tweets.stream().map(TweetChildView::from).toList());
+    }
+
+    @GetMapping("/recommended")
+    ResponseEntity<List<TweetChildView>> getRecommended(@AuthenticationPrincipal User principal) {
+        List<Tweet> tweets = this.tweetService.getRecommendedPosts(principal.getUsername());
         return ResponseEntity.ok().body(tweets.stream().map(TweetChildView::from).toList());
     }
 

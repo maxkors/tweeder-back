@@ -1,6 +1,9 @@
 package com.maxkors.tweeder.infrastructure;
 
 import com.maxkors.tweeder.domain.Tweet;
+import jakarta.annotation.Nonnull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -108,4 +111,8 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
                 where b.username = :username and t.id in :ids
             """)
     Set<Long> getBookmarkedPostIdsFromList(String username, List<Long> ids);
+
+    // TODO: rewrite placeholder
+    @Nonnull
+    Page<Tweet> findAll(@Nonnull Pageable pageable);
 }

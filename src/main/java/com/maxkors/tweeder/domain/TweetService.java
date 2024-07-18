@@ -5,6 +5,7 @@ import com.maxkors.tweeder.infrastructure.TweetRepository;
 import com.maxkors.tweeder.infrastructure.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
@@ -251,5 +252,31 @@ public class TweetService {
         }
 
         return tweetsBookmarkedByUser;
+    }
+
+    @Transactional
+    public List<Tweet> getRecommendedPosts(String username) {
+
+        List<Tweet> tweets = new ArrayList<>(tweetRepository.findAll(PageRequest.of(0, 5)).getContent());
+        tweets.sort(Comparator.comparing(Tweet::getDateTime).reversed());
+
+        List<Long> tweetIds = new ArrayList<>();
+
+        tweets.forEach(tweet -> tweetIds.add(tweet.getId()));
+
+        Set<Long> likedPostIds = this.tweetRepository.getLikedPostIdsFromList(username, tweetIds);
+        Set<Long> bookmarkedPostIds = this.tweetRepository.getBookmarkedPostIdsFromList(username, tweetIds);
+
+        for (Tweet tweet : tweets) {
+            if (likedPostIds.contains(tweet.getId())) {
+                tweet.setLiked(true);
+            }
+
+            if (bookmarkedPostIds.contains(tweet.getId())) {
+                tweet.setBookmarked(true);
+            }
+        }
+
+        return tweets;
     }
 }
