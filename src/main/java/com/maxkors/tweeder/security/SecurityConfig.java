@@ -74,6 +74,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/comments/users/{username}").permitAll()
 
                         .requestMatchers("/users/{username}").authenticated()
+                        .requestMatchers("/users/{username}/profile").authenticated()
                         .requestMatchers("/users").hasRole(RoleName.ROLE_ADMIN.value())
                         .requestMatchers("/users/{username}/follow").authenticated()
                         .requestMatchers("/users/search").authenticated()

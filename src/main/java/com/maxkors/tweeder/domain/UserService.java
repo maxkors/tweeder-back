@@ -18,11 +18,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Optional<User> getByUsername(String username) {
-        return userRepository.getByUsername(username);
-    }
-
-    @Transactional
     public List<User> getAll() {
         return userRepository.findAll();
     }
@@ -59,5 +54,21 @@ public class UserService {
     @Transactional
     public List<ProfileCardDTO> getMatchingProfiles(String criteria) {
         return this.userRepository.getAllMatchingProfiles(criteria);
+    }
+
+    @Transactional
+    public Optional<User> getUserData(String principalUsername) {
+        return this.userRepository.getUserDataByUsername(principalUsername);
+    }
+
+    @Transactional
+    public Optional<User> editUserData(String principalUsername, UserDataDTO userData) {
+        return this.userRepository.getUserDataByUsername(principalUsername).map(user -> {
+            user.setUsername(userData.username());
+            user.setName(userData.name());
+            user.setEmail(userData.email());
+
+            return user;
+        });
     }
 }

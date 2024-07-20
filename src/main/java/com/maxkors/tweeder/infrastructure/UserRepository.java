@@ -41,4 +41,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             where u.username like %:criteria% or u.name like %:criteria%
             """, nativeQuery = true)
     List<ProfileCardDTO> getAllMatchingProfiles(@Param("criteria") String criteria);
+
+    @Query("select u from User u where u.username = :username")
+    Optional<User> getUserDataByUsername(@Param("username") String username);
 }

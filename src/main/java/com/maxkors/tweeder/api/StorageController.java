@@ -3,8 +3,6 @@ package com.maxkors.tweeder.api;
 import com.maxkors.tweeder.domain.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +24,7 @@ public class StorageController {
 //    }
 
     @PostMapping
-    ResponseEntity<String> uploadFile(@RequestPart(value = "file") MultipartFile file, @RequestPart String text,  @AuthenticationPrincipal User principal) {
+    ResponseEntity<String> uploadFile(@RequestPart(value = "file") MultipartFile file, @RequestPart String text) {
         System.out.println(text);
         return  ResponseEntity.ok().body(this.storageService.uploadFile(file));
     }

@@ -1,5 +1,6 @@
 package com.maxkors.tweeder.api;
 
+import com.maxkors.tweeder.domain.UserDataDTO;
 import com.maxkors.tweeder.domain.UserService;
 import com.maxkors.tweeder.infrastructure.ProfileCardDTO;
 import com.maxkors.tweeder.infrastructure.ProfileDTO;
@@ -24,6 +25,26 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
+    ResponseEntity<UserDataDTO> getUserData(@PathVariable String username, @AuthenticationPrincipal User principal) {
+        if (!username.equals(principal.getUsername())) return ResponseEntity.badRequest().build();
+
+        return this.userService.getUserData(principal.getUsername())
+                .map(user -> ResponseEntity.ok(UserDataDTO.fromUser(user)))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
+    @PutMapping("/{username}")
+    ResponseEntity<UserDataDTO> editUserData(@PathVariable String username,
+                                         @RequestBody UserDataDTO userData,
+                                         @AuthenticationPrincipal User principal) {
+        if (!username.equals(principal.getUsername())) return ResponseEntity.badRequest().build();
+
+        return this.userService.editUserData(principal.getUsername(), userData)
+                .map(user -> ResponseEntity.ok(UserDataDTO.fromUser(user)))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
+    @GetMapping("/{username}/profile")
     ResponseEntity<ProfileDTO> getProfile(@PathVariable String username, @AuthenticationPrincipal User principal) {
         ProfileDTO profile = this.userService.getProfile(username, principal);
 
