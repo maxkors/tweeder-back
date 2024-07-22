@@ -16,6 +16,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final StorageService storageService;
 
     @Transactional
     public List<User> getAll() {
@@ -62,8 +63,13 @@ public class UserService {
     }
 
     @Transactional
-    public Optional<User> editUserData(String principalUsername, UserDataDTO userData) {
+    public Optional<User> editUserData(String principalUsername, NewUserDataDTO userData) {
         return this.userRepository.getUserDataByUsername(principalUsername).map(user -> {
+            if (!userData.avatar().isEmpty()) {
+                String avatarFileName = this.storageService.uploadFile(userData.avatar());
+                user.setAvatarUrl(avatarFileName);
+            }
+
             user.setUsername(userData.username());
             user.setName(userData.name());
             user.setEmail(userData.email());

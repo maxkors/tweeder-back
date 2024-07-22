@@ -31,7 +31,7 @@ public class TweetController {
 
     @PostMapping(consumes = "multipart/form-data")
     ResponseEntity<TweetParentView> createTweet(@AuthenticationPrincipal User principal,
-                                                @RequestParam(value = "media") @Nullable MultipartFile media,
+                                                @RequestParam(value = "media") MultipartFile media,
                                                 @RequestParam(value = "parentPostId") @Nullable Long parentPostId,
                                                 @RequestParam(value = "text") String text) {
                                                     System.out.println(media);

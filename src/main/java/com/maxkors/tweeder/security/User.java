@@ -1,6 +1,8 @@
 package com.maxkors.tweeder.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.maxkors.tweeder.api.AvatarUrlSerializer;
 import com.maxkors.tweeder.domain.Chat;
 import com.maxkors.tweeder.domain.Tweet;
 import jakarta.persistence.*;
@@ -40,6 +42,10 @@ public class User {
     @JsonIgnore
     @Column(name = "email")
     private String email;
+
+    @JsonSerialize(using = AvatarUrlSerializer.class, as = String.class)
+    @Column(name = "avatar_url")
+    private String avatarUrl;
 
     @JsonIgnore
     @ManyToMany

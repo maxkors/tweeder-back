@@ -23,6 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             select u.id,
                    u.username,
                    u.name,
+                   u.avatar_url as avatarUrl,
                    count(case u.id when s.subject_id then 1 end) as subscribersCount,
                    count(case u.id when s.follower_id then 1 end)  as subscriptionsCount,
                    bool_or((select au.id from app_user au where au.username = :principal) = s.follower_id) as isFollowed
@@ -36,7 +37,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
     @Query(value = """
-            select u.id, u.username, u.name
+            select u.id, u.username, u.name, u.avatar_url as avatarUrl
             from app_user u
             where u.username like %:criteria% or u.name like %:criteria%
             """, nativeQuery = true)

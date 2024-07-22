@@ -1,14 +1,19 @@
 package com.maxkors.tweeder.api;
 
+import com.maxkors.tweeder.domain.NewTweetDTO;
+import com.maxkors.tweeder.domain.NewUserDataDTO;
 import com.maxkors.tweeder.domain.UserDataDTO;
 import com.maxkors.tweeder.domain.UserService;
 import com.maxkors.tweeder.infrastructure.ProfileCardDTO;
 import com.maxkors.tweeder.infrastructure.ProfileDTO;
+import io.jsonwebtoken.lang.Collections;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,13 +38,16 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @PutMapping("/{username}")
-    ResponseEntity<UserDataDTO> editUserData(@PathVariable String username,
-                                         @RequestBody UserDataDTO userData,
-                                         @AuthenticationPrincipal User principal) {
-        if (!username.equals(principal.getUsername())) return ResponseEntity.badRequest().build();
+    @PutMapping(value = "/{currentUsername}", consumes = "multipart/form-data")
+    ResponseEntity<UserDataDTO> editUserData(@PathVariable String currentUsername,
+                                             @AuthenticationPrincipal User principal,
+                                             @RequestParam(value = "avatar") MultipartFile avatar,
+                                             @RequestParam(value = "username") String username,
+                                             @RequestParam(value = "name") String name,
+                                             @RequestParam(value = "email") String email) {
+        if (!currentUsername.equals(principal.getUsername())) return ResponseEntity.badRequest().build();
 
-        return this.userService.editUserData(principal.getUsername(), userData)
+        return this.userService.editUserData(principal.getUsername(), new NewUserDataDTO(username, name, email, avatar))
                 .map(user -> ResponseEntity.ok(UserDataDTO.fromUser(user)))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }

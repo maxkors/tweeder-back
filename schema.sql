@@ -15,11 +15,12 @@ drop table if exists app_user;
 
 create table app_user
 (
-    id       serial primary key,
-    username varchar(100) not null,
-    password varchar(255) not null,
-    name     varchar(100) not null,
-    email    varchar(100) not null
+    id        serial primary key,
+    username  varchar(100) not null,
+    password  varchar(255) not null,
+    name      varchar(100) not null,
+    email     varchar(100) not null,
+    avatar_url varchar(100)
 );
 
 create table role
@@ -178,61 +179,61 @@ values (1, 1),
 --        (2, 'What are u doing rn?', 10, 2, '2023-03-22 11:10:25-07'),
 --        (3, 'There is nothing impossible to him who will try', 128, 0, '2023-08-10 16:10:25-07');
 
-insert into tweet(app_user_id, text, likes_count, comments_count, date_time, parent_id)
-values (1, 'Salut', 2, 2, '2023-06-22 19:10:25-07', null),
-       (1, 'Whats new?', 1, 0, '2023-06-20 13:10:25-07', 1),
-       (2, 'Halo', 1, 0, '2023-03-22 11:10:25-07', 1),
-       (2, 'Just look at this:', 0, 0, '2023-03-22 11:10:25-07', null),
-       (2, 'What are u doing rn?', 0, 0, '2023-03-22 11:10:25-07', null),
-       (3, 'There is nothing impossible to him who will try', 0, 0, '2023-08-10 16:10:25-07', null);
+-- insert into tweet(app_user_id, text, likes_count, comments_count, date_time, parent_id)
+-- values (1, 'Salut', 2, 2, '2023-06-22 19:10:25-07', null),
+--        (1, 'Whats new?', 1, 0, '2023-06-20 13:10:25-07', 1),
+--        (2, 'Halo', 1, 0, '2023-03-22 11:10:25-07', 1),
+--        (2, 'Just look at this:', 0, 0, '2023-03-22 11:10:25-07', null),
+--        (2, 'What are u doing rn?', 0, 0, '2023-03-22 11:10:25-07', null),
+--        (3, 'There is nothing impossible to him who will try', 0, 0, '2023-08-10 16:10:25-07', null);
 
 -- insert into retweet
 -- values (1, 3, 1, 'Ciao', 5, '2023-06-22 19:15:25-07');
 
-insert into media (type, urn, tweet_id)
-values ('image', 'room1-1.webp', 1),
-       ('image', 'room2-1.webp', 2),
-       ('image', 'room2-2.webp', 2),
-       ('image', 'room4-1.webp', 4),
-       ('image', 'room4-2.webp', 4),
-       ('image', 'room4-3.webp', 4),
-       ('image', 'room4-4.webp', 4),
-       ('image', 'room5-1.webp', 5),
-       ('image', 'room5-2.webp', 5),
-       ('image', 'room5-3.webp', 5);
-
-insert into comment(tweet_id, app_user_id, text, likes_count, date_time)
-values (5, 1, 'Listening to music', 10, '2023-06-22 19:15:25-07'),
-       (5, 2, 'Nice', 3, '2023-06-22 19:17:25-07'),
-       (2, 3, 'Sup?', 5, '2023-06-22 19:17:25-07'),
-       (1, 3, 'Salam', 1, '2023-06-22 19:17:25-07');
-
-insert into subscription
-values (1, 2),
-       (1, 3),
-       (2, 1),
-       (3, 1);
-
-insert into user_like
-values (1, 1),
-       (1, 3),
-       (2, 1),
-       (2, 2);
-
-insert into bookmark
-values (1, 1),
-       (1, 4);
-
-insert into chat
-values (nextval('chat_id_seq'));
-
-insert into app_user__chat
-values (1, 1),
-       (2, 1);
-
-insert into message(sender_id, chat_id, text)
-values (1, 1, 'hi'),
-       (2, 1, 'halo');
+-- insert into media (type, urn, tweet_id)
+-- values ('image', 'room1-1.webp', 1),
+--        ('image', 'room2-1.webp', 2),
+--        ('image', 'room2-2.webp', 2),
+--        ('image', 'room4-1.webp', 4),
+--        ('image', 'room4-2.webp', 4),
+--        ('image', 'room4-3.webp', 4),
+--        ('image', 'room4-4.webp', 4),
+--        ('image', 'room5-1.webp', 5),
+--        ('image', 'room5-2.webp', 5),
+--        ('image', 'room5-3.webp', 5);
+--
+-- insert into comment(tweet_id, app_user_id, text, likes_count, date_time)
+-- values (5, 1, 'Listening to music', 10, '2023-06-22 19:15:25-07'),
+--        (5, 2, 'Nice', 3, '2023-06-22 19:17:25-07'),
+--        (2, 3, 'Sup?', 5, '2023-06-22 19:17:25-07'),
+--        (1, 3, 'Salam', 1, '2023-06-22 19:17:25-07');
+--
+-- insert into subscription
+-- values (1, 2),
+--        (1, 3),
+--        (2, 1),
+--        (3, 1);
+--
+-- insert into user_like
+-- values (1, 1),
+--        (1, 3),
+--        (2, 1),
+--        (2, 2);
+--
+-- insert into bookmark
+-- values (1, 1),
+--        (1, 4);
+--
+-- insert into chat
+-- values (nextval('chat_id_seq'));
+--
+-- insert into app_user__chat
+-- values (1, 1),
+--        (2, 1);
+--
+-- insert into message(sender_id, chat_id, text)
+-- values (1, 1, 'hi'),
+--        (2, 1, 'halo');
 
 
 -- select id, NULL as tweet_id, app_user_id, text, likes, date_time from tweet t
@@ -269,23 +270,14 @@ values (1, 1, 'hi'),
 -- order by t.date_time desc;
 
 
-select *
-from app_user__chat;
-
-
-select auc.chat_id
-from app_user__chat auc
-group by auc.chat_id
-having bool_and(auc.app_user_id in (1, null));
-
-
-select auc.chat_id as id
-from app_user__chat auc
-group by auc.chat_id
-having bool_and(auc.app_user_id in (coalesce((select u.id from app_user u where u.username = 'maximus'), -1),
-                                    coalesce((select u.id from app_user u where u.username = 'commodus'), -1)));
-
-
-select u.id
-from app_user u
-where u.username = 'maximuss';
+-- select auc.chat_id
+-- from app_user__chat auc
+-- group by auc.chat_id
+-- having bool_and(auc.app_user_id in (1, null));
+--
+--
+-- select auc.chat_id as id
+-- from app_user__chat auc
+-- group by auc.chat_id
+-- having bool_and(auc.app_user_id in (coalesce((select u.id from app_user u where u.username = 'maximus'), -1),
+--                                     coalesce((select u.id from app_user u where u.username = 'commodus'), -1)));
